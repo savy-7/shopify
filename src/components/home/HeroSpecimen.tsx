@@ -12,6 +12,8 @@ export type Specimen = {
   /** Darkened where the graphic accent is too pale to read as type. */
   accentInk: string;
   available: boolean;
+  /** Blend classes for this pack; some sources need a backdrop correction. */
+  packClass: string;
   price: string | null;
   image: { url: string; width: number; height: number; alt: string } | null;
 };
@@ -145,7 +147,7 @@ export default function HeroSpecimen({ specimens }: { specimens: Specimen[] }) {
               height={active.image.height}
               priority={index === 0}
               sizes="(max-width: 640px) 70vw, (max-width: 1024px) 45vw, 420px"
-              className="pack-blend animate-specimen relative z-10 h-full w-auto object-contain"
+              className={`${active.packClass} animate-specimen relative z-10 h-full w-auto object-contain`}
             />
           )}
 

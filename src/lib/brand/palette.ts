@@ -68,3 +68,19 @@ export function shortNameFor(handle: string, fallback: string): string {
 export function isPaleAccent(accent: Accent): boolean {
   return accent === "cashew";
 }
+
+/**
+ * Pack shots are composited with `mix-blend-mode: multiply`, which assumes a
+ * pure-white backdrop. Five of the six sit on #FEFEFE and disappear cleanly.
+ * The Nuts & Seeds Mix shot was taken on cream (#FBF8F0) and leaves a visible
+ * warm rectangle, so it gets a brightness lift that pushes its backdrop to
+ * white. Measured: 1.045 clears the box with no visible change to the artwork.
+ *
+ * This is a workaround for a source asset. Re-export that image on white and
+ * the handle can come out of this list.
+ */
+const NON_WHITE_BACKDROP = new Set(["nuts-seeds-mix"]);
+
+export function packClassName(handle: string): string {
+  return NON_WHITE_BACKDROP.has(handle) ? "pack-blend pack-normalize" : "pack-blend";
+}

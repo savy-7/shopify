@@ -19,6 +19,7 @@
 
   --font-display: var(--font-display);
   --font-serif: var(--font-serif);
+  --font-body: var(--font-body);
   --font-numeral: var(--font-mono);
 }
 
@@ -35,6 +36,7 @@
 
   --font-display: var(--font-display);
   --font-serif: var(--font-serif);
+  --font-body: var(--font-body);
   --font-numeral: var(--font-numeral);
 }
 
@@ -120,6 +122,13 @@
 body {
   background: var(--color-paper);
   color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+/* Headings opt into the display face explicitly via `font-display`. */
+h1,
+h2,
+h3 {
   font-family: var(--font-display);
 }
 
@@ -130,6 +139,12 @@ body {
   mix-blend-mode: multiply;
 }
 
+/* Lifts a non-white product backdrop to white so `pack-blend` can clear it.
+   See NON_WHITE_BACKDROP in src/lib/brand/palette.ts. */
+@utility pack-normalize {
+  filter: brightness(1.045);
+}
+
 /* Paper tooth. Keeps large flat areas from reading as dead screen-white. */
 @utility grain {
   position: relative;
@@ -137,6 +152,87 @@ body {
 @utility grain-layer {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.34'/%3E%3C/svg%3E");
   mix-blend-mode: multiply;
+}
+
+/* Scroll reveal. The element ships transparent and is released by an
+   IntersectionObserver setting data-shown, so nothing animates off-screen.
+   `<noscript>` in the layout opts out of the whole effect. */
+@utility reveal {
+  opacity: 0;
+  transform: translate3d(0, 30px, 0);
+  transition:
+    opacity 0.85s var(--ease-brand),
+    transform 0.85s var(--ease-brand);
+
+  &[data-shown="true"] {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Variant for the pack shelf: lifts rather than slides, so the row settles. */
+@utility reveal-lift {
+  opacity: 0;
+  transform: translate3d(0, 64px, 0) scale(0.96);
+  transition:
+    opacity 1s var(--ease-brand),
+    transform 1s var(--ease-brand);
+
+  &[data-shown="true"] {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* Merchant-authored description HTML from Shopify admin. Styled here rather
+   than rewritten, so whatever they publish renders sensibly. */
+@utility prose-brand {
+  line-height: 1.75;
+  color: color-mix(in oklab, var(--color-ink) 72%, transparent);
+
+  & p {
+    margin-block: 0.95em;
+  }
+
+  & strong,
+  & b {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  & h2,
+  & h3,
+  & h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    margin-top: 1.9em;
+    margin-bottom: 0.5em;
+  }
+
+  & ul,
+  & ol {
+    margin-block: 1em;
+    padding-left: 1.25em;
+  }
+
+  & ul {
+    list-style: disc;
+  }
+
+  & ol {
+    list-style: decimal;
+  }
+
+  & li {
+    margin-block: 0.4em;
+  }
+
+  & a {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
 }
 
 /* The specimen rotator scrolls horizontally on small screens; the native bar
@@ -156,5 +252,13 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* Scroll reveals are released here rather than in JavaScript, so the content
+     is visible even before hydration. */
+  .reveal,
+  .reveal-lift {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

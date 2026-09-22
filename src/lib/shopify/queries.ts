@@ -18,6 +18,7 @@ const PRODUCT_FIELDS = `#graphql
     title
     handle
     description
+    descriptionHtml
     availableForSale
     featuredImage {
       url
@@ -29,6 +30,29 @@ const PRODUCT_FIELDS = `#graphql
       minVariantPrice {
         amount
         currencyCode
+      }
+    }
+    images(first: 8) {
+      edges {
+        node {
+          url
+          width
+          height
+          altText
+        }
+      }
+    }
+    variants(first: 20) {
+      edges {
+        node {
+          id
+          title
+          availableForSale
+          price {
+            amount
+            currencyCode
+          }
+        }
       }
     }
   }
