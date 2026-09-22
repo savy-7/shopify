@@ -20,7 +20,7 @@ export default async function Home() {
   return (
     <>
       <IntroCurtain />
-      <Opening />
+      <Opening products={products} />
       <Hero products={products} />
       <Ticker items={tickerItems} />
       <Intention />
