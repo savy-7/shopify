@@ -8,15 +8,17 @@ import NutIcon from "./NutIcon";
 export default function RotatingSeal({
   text = "Crafting goodness in every bite",
   className = "",
+  style,
 }: {
   text?: string;
   className?: string;
+  style?: React.CSSProperties;
 }) {
   // A trailing separator keeps the loop from butting the first word against the last.
   const ring = `${text} • `.toUpperCase();
 
   return (
-    <div className={`relative ${className}`} aria-hidden="true">
+    <div className={`relative ${className}`} style={style} aria-hidden="true">
       <svg viewBox="0 0 100 100" className="animate-seal h-full w-full">
         <defs>
           <path
