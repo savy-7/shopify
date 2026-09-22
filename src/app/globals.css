@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  /* Base surfaces */
+  --color-paper: #faf9f6;
+  --color-ink: #141414;
+
+  /* Category accents (product family colors) */
+  --color-pistachio: #8baa4c;
+  --color-almond: #c9a876;
+  --color-cashew: #e8dcc0;
+  --color-date: #5a3e2b;
+  --color-raisin: #6b3f4e;
+
+  /* Brand accent, used sparingly across the whole site */
+  --color-lime: #c4e03d;
+
+  --font-display: var(--font-jakarta);
+  --font-body: var(--font-jakarta);
+  --font-numeral: var(--font-mono);
+}
+
+@theme inline {
+  --color-paper: var(--color-paper);
+  --color-ink: var(--color-ink);
+  --color-pistachio: var(--color-pistachio);
+  --color-almond: var(--color-almond);
+  --color-cashew: var(--color-cashew);
+  --color-date: var(--color-date);
+  --color-raisin: var(--color-raisin);
+  --color-lime: var(--color-lime);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-numeral: var(--font-numeral);
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
