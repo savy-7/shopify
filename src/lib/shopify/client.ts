@@ -24,7 +24,9 @@ export async function shopifyFetch<TData, TVariables = Record<string, unknown>>(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": token,
+      // Private (server-side) tokens authenticate with this header. Public
+      // tokens would use X-Shopify-Storefront-Access-Token instead.
+      "Shopify-Storefront-Private-Token": token,
     },
     body: JSON.stringify({ query, variables }),
     next: { revalidate },
