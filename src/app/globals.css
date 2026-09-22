@@ -5,12 +5,14 @@
   --color-paper: #faf9f6;
   --color-ink: #141414;
 
-  /* Category accents (product family colors) */
-  --color-pistachio: #8baa4c;
-  --color-almond: #c9a876;
-  --color-cashew: #e8dcc0;
-  --color-date: #5a3e2b;
-  --color-raisin: #6b3f4e;
+  /* Category accents — sampled from the actual printed packaging so the UI
+     never fights the product photography. See src/lib/brand/palette.ts. */
+  --color-almond: #471b14;
+  --color-mix: #c74408;
+  --color-cashew: #e7d4ba;
+  --color-raisin: #68334b;
+  --color-date: #1b2436;
+  --color-pistachio: #738b1d;
 
   /* Brand accent, used sparingly across the whole site */
   --color-lime: #c4e03d;
@@ -23,11 +25,12 @@
 @theme inline {
   --color-paper: var(--color-paper);
   --color-ink: var(--color-ink);
-  --color-pistachio: var(--color-pistachio);
   --color-almond: var(--color-almond);
+  --color-mix: var(--color-mix);
   --color-cashew: var(--color-cashew);
-  --color-date: var(--color-date);
   --color-raisin: var(--color-raisin);
+  --color-date: var(--color-date);
+  --color-pistachio: var(--color-pistachio);
   --color-lime: var(--color-lime);
 
   --font-display: var(--font-display);
@@ -35,10 +38,56 @@
   --font-numeral: var(--font-numeral);
 }
 
+@theme {
+  /* Shared easing — expressive but never bouncy. */
+  --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-rise: rise 0.7s var(--ease-brand) both;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-marquee: marquee 38s linear infinite;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 1.1em, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(var(--float-tilt, 0deg));
+    }
+    50% {
+      transform: translate3d(0, -14px, 0) rotate(var(--float-tilt, 0deg));
+    }
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+}
+
 body {
   background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-body);
+}
+
+/* Product shots ship on an opaque near-white backdrop (no alpha channel).
+   Multiplying drops that backdrop out over any light surface, so packs can
+   sit directly on colour blocks without a visible rectangle. */
+@utility pack-blend {
+  mix-blend-mode: multiply;
 }
 
 @media (prefers-reduced-motion: reduce) {

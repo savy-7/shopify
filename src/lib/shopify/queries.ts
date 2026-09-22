@@ -11,3 +11,47 @@ export type ShopQueryResult = {
     name: string;
   };
 };
+
+const PRODUCT_FIELDS = `#graphql
+  fragment ProductFields on Product {
+    id
+    title
+    handle
+    description
+    availableForSale
+    featuredImage {
+      url
+      width
+      height
+      altText
+    }
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+  }
+`;
+
+export const PRODUCT_BY_HANDLE_QUERY = `#graphql
+  ${PRODUCT_FIELDS}
+  query ProductByHandle($handle: String!) {
+    product(handle: $handle) {
+      ...ProductFields
+    }
+  }
+`;
+
+export const PRODUCTS_QUERY = `#graphql
+  ${PRODUCT_FIELDS}
+  query Products($first: Int!) {
+    products(first: $first) {
+      edges {
+        node {
+          ...ProductFields
+        }
+      }
+    }
+  }
+`;
