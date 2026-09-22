@@ -117,6 +117,41 @@
       transform: scaleX(1);
     }
   }
+
+  --animate-seal: seal-turn 26s linear infinite;
+  --animate-drift: drift 9s ease-in-out infinite;
+
+  @keyframes seal-turn {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Looser than `float`: the scattered icons wander rather than bob. */
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(var(--drift-tilt, 0deg));
+    }
+    33% {
+      transform: translate3d(6px, -12px, 0) rotate(calc(var(--drift-tilt, 0deg) + 6deg));
+    }
+    66% {
+      transform: translate3d(-5px, -5px, 0) rotate(calc(var(--drift-tilt, 0deg) - 5deg));
+    }
+  }
+
+  /* The hero image wipes up behind its arch. */
+  @keyframes unveil {
+    from {
+      clip-path: inset(100% 0 0 0);
+      transform: scale(1.06);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+      transform: scale(1);
+    }
+  }
 }
 
 body {
@@ -181,6 +216,74 @@ h3 {
   &[data-shown="true"] {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* Page-load curtain. Plain classes rather than utilities: this is one
+   choreographed component, not a reusable style. See IntroCurtain.tsx. */
+.intro-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  animation: intro-retire 0.01s linear 1s forwards;
+}
+
+@keyframes intro-retire {
+  to {
+    visibility: hidden;
+  }
+}
+
+.intro-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.5%;
+  background: var(--color-lime);
+  will-change: transform;
+}
+
+.intro-panel--top {
+  top: 0;
+  animation: curtain-up 0.72s var(--ease-brand) 0.13s forwards;
+}
+
+.intro-panel--bottom {
+  bottom: 0;
+  animation: curtain-down 0.72s var(--ease-brand) 0.13s forwards;
+}
+
+@keyframes curtain-up {
+  to {
+    transform: translate3d(0, -101%, 0);
+  }
+}
+
+@keyframes curtain-down {
+  to {
+    transform: translate3d(0, 101%, 0);
+  }
+}
+
+.intro-mark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-size: clamp(1.4rem, 4vw, 2.6rem);
+  color: var(--color-ink);
+  animation: intro-mark-out 0.36s var(--ease-brand) 0.1s forwards;
+}
+
+@keyframes intro-mark-out {
+  to {
+    opacity: 0;
+    transform: translate3d(0, -14px, 0);
   }
 }
 
@@ -260,5 +363,11 @@ h3 {
   .reveal-lift {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  /* The opening curtain is removed outright rather than run very fast — a
+     full-screen wipe is exactly the kind of motion this setting asks to avoid. */
+  .intro-curtain {
+    display: none !important;
   }
 }

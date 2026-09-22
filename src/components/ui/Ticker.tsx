@@ -1,3 +1,8 @@
+import NutIcon, { type NutIconName } from "./NutIcon";
+
+/** Cycles so the separator changes as the strip runs, rather than repeating one glyph. */
+const SEPARATORS: NutIconName[] = ["almond", "pistachio", "cashew", "seed", "raisin", "date"];
+
 /**
  * Infinite horizontal marquee.
  *
@@ -13,13 +18,17 @@ export default function Ticker({ items }: { items: string[] }) {
       <div className="flex w-max animate-marquee">
         {[0, 1].map((copy) => (
           <ul key={copy} className="flex shrink-0 items-center">
-            {items.map((item) => (
+            {items.map((item, i) => (
               <li
                 key={item}
                 className="flex items-center font-numeral text-[0.7rem] uppercase tracking-[0.3em] text-paper"
               >
                 <span className="px-7">{item}</span>
-                <span className="text-lime">✦</span>
+                <NutIcon
+                  name={SEPARATORS[i % SEPARATORS.length]}
+                  className="h-4 w-4 shrink-0 text-lime"
+                  strokeWidth={1.6}
+                />
               </li>
             ))}
           </ul>

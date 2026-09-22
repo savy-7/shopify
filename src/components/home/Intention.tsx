@@ -1,5 +1,9 @@
 import Reveal from "@/components/ui/Reveal";
+import NutIcon, { type NutIconName } from "@/components/ui/NutIcon";
 import { INTRO, PILLARS } from "@/lib/brand/content";
+
+/** One mark per pillar, drawn from the range rather than generic UI glyphs. */
+const PILLAR_ICONS: NutIconName[] = ["almond", "sprig", "pistachio"];
 
 export default function Intention() {
   return (
@@ -23,9 +27,16 @@ export default function Intention() {
       <ol className="mt-20 grid gap-px border-t border-ink/10 sm:grid-cols-3">
         {PILLARS.map((pillar, i) => (
           <Reveal as="li" key={pillar.title} delay={i * 140} className="pt-7 sm:pr-8">
-            <p className="font-numeral text-[0.66rem] tracking-[0.2em] text-ink/30">
-              {String(i + 1).padStart(2, "0")}
-            </p>
+            <div className="flex items-center gap-3">
+              <NutIcon
+                name={PILLAR_ICONS[i]}
+                className="h-7 w-7 text-ink/70"
+                strokeWidth={1.3}
+              />
+              <p className="font-numeral text-[0.66rem] tracking-[0.2em] text-ink/30">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+            </div>
             <h3 className="mt-5 text-xl font-bold tracking-[-0.02em]">{pillar.title}</h3>
             <p className="mt-3 max-w-xs leading-relaxed text-ink/60">{pillar.body}</p>
           </Reveal>

@@ -9,6 +9,7 @@ import {
   shortNameFor,
 } from "@/lib/brand/palette";
 import { formatMoney } from "@/lib/format";
+import NutIcon, { iconForHandle } from "@/components/ui/NutIcon";
 
 export default function ProductCard({
   product,
@@ -39,9 +40,14 @@ export default function ProductCard({
       >
         <span
           aria-hidden="true"
-          className="absolute top-4 left-5 font-numeral text-[0.6rem] uppercase tracking-[0.2em] opacity-50"
+          className="absolute top-4 left-5 flex items-center gap-2 font-numeral text-[0.6rem] uppercase tracking-[0.2em] opacity-60"
           style={{ color: "var(--accent-ink)" }}
         >
+          <NutIcon
+            name={iconForHandle(product.handle)}
+            className="h-4 w-4 transition-transform duration-500 ease-[var(--ease-brand)] group-hover:rotate-12"
+            strokeWidth={1.5}
+          />
           {shortNameFor(product.handle, product.title)}
         </span>
 

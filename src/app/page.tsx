@@ -1,3 +1,4 @@
+import IntroCurtain from "@/components/home/IntroCurtain";
 import Opening from "@/components/home/Opening";
 import Hero from "@/components/home/Hero";
 import Intention from "@/components/home/Intention";
@@ -18,6 +19,7 @@ export default async function Home() {
 
   return (
     <>
+      <IntroCurtain />
       <Opening products={products} />
       <Hero products={products} />
       <Ticker items={tickerItems} />
