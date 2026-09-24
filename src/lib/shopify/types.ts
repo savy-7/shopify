@@ -18,6 +18,32 @@ export type ProductVariant = {
   price: Money;
 };
 
+export type CartLine = {
+  id: string;
+  quantity: number;
+  cost: { totalAmount: Money };
+  merchandise: {
+    id: string;
+    title: string;
+    product: {
+      title: string;
+      handle: string;
+      featuredImage: ShopifyImage | null;
+    };
+  };
+};
+
+export type Cart = {
+  id: string;
+  checkoutUrl: string;
+  totalQuantity: number;
+  cost: {
+    subtotalAmount: Money;
+    totalAmount: Money;
+  };
+  lines: { edges: { node: CartLine }[] };
+};
+
 export type Product = {
   id: string;
   title: string;

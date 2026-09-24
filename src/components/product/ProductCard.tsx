@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/shopify/types";
@@ -10,6 +12,7 @@ import {
 } from "@/lib/brand/palette";
 import { formatMoney } from "@/lib/format";
 import NutIcon, { iconForHandle } from "@/components/ui/NutIcon";
+import { useCart } from "@/components/cart/CartProvider";
 
 export default function ProductCard({
   product,
@@ -20,6 +23,10 @@ export default function ProductCard({
 }) {
   const accent = accentFor(product.handle);
   const amount = Number(product.priceRange.minVariantPrice.amount);
+  const variant = product.variants.edges[0]?.node;
+  const { addItem, isPending } = useCart();
+
+  const canQuickAdd = Boolean(variant) && amount > 0 && product.availableForSale;
 
   return (
     <Link
@@ -67,6 +74,26 @@ export default function ProductCard({
             sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 22vw"
             className={`${packClassName(product.handle)} h-[86%] w-auto object-contain transition-transform duration-600 ease-[var(--ease-brand)] group-hover:-translate-y-2 group-hover:scale-[1.03]`}
           />
+        )}
+
+        {canQuickAdd && (
+          <button
+            type="button"
+            aria-label={`Add ${product.title} to cart`}
+            disabled={isPending}
+            onClick={(event) => {
+              // The card is a Link; quick-add must not also trigger navigation.
+              event.preventDefault();
+              event.stopPropagation();
+              addItem(variant!.id, 1);
+            }}
+            // Always visible rather than shown only on `group-hover`: a
+            // hover-only reveal is permanently invisible on touch devices,
+            // which is most of this store's traffic.
+            className="absolute right-3 bottom-3 flex h-10 w-10 items-center justify-center rounded-full bg-ink text-lg text-paper transition-transform duration-300 ease-[var(--ease-brand)] hover:scale-110 disabled:opacity-60 sm:right-4 sm:bottom-4"
+          >
+            +
+          </button>
         )}
       </div>
 

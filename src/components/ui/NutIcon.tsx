@@ -82,10 +82,12 @@ export default function NutIcon({
   name,
   className = "",
   strokeWidth = 1.4,
+  style,
 }: {
   name: NutIconName;
   className?: string;
   strokeWidth?: number;
+  style?: React.CSSProperties;
 }) {
   return (
     <svg
@@ -98,6 +100,7 @@ export default function NutIcon({
       aria-hidden="true"
       focusable="false"
       className={className}
+      style={style}
     >
       {PATHS[name]}
     </svg>

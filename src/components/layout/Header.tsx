@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useCart } from "@/components/cart/CartProvider";
 
 const NAV_LINKS = [
   { href: "/shop", label: "Shop" },
@@ -13,6 +14,8 @@ const NAV_LINKS = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { cart, hasLoaded, open: openCart } = useCart();
+  const quantity = cart?.totalQuantity ?? 0;
 
   return (
     <header className="sticky top-0 z-50 border-b border-ink/10 bg-paper/85 backdrop-blur-md">
@@ -48,14 +51,18 @@ export default function Header() {
         <div className="flex items-center gap-2.5">
           <button
             type="button"
-            aria-label="Open cart"
+            aria-label={`Open cart${quantity > 0 ? `, ${quantity} items` : ""}`}
+            onClick={openCart}
             className="group flex items-center gap-2.5 rounded-full border border-ink/15 py-2 pr-2 pl-4 transition-colors hover:border-ink/40"
           >
             <span className="font-numeral text-[0.68rem] uppercase tracking-[0.18em]">
               Cart
             </span>
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ink font-numeral text-[0.68rem] text-paper transition-transform duration-300 ease-[var(--ease-brand)] group-hover:scale-110">
-              0
+            <span
+              key={quantity}
+              className="animate-specimen flex h-6 w-6 items-center justify-center rounded-full bg-ink font-numeral text-[0.68rem] text-paper transition-transform duration-300 ease-[var(--ease-brand)] group-hover:scale-110"
+            >
+              {hasLoaded ? quantity : ""}
             </span>
           </button>
 

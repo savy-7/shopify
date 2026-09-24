@@ -7,6 +7,8 @@ import {
 } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { CartProvider } from "@/components/cart/CartProvider";
+import CartDrawer from "@/components/cart/CartDrawer";
 import "./globals.css";
 
 /** Editorial grotesque with real quirk in the letterforms — carries the display type. */
@@ -56,6 +58,12 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  // Deliberately not reading the cart cookie here. Doing so in the root
+  // layout would make cookies() a dependency of every route in the app,
+  // which forces the whole site into request-time dynamic rendering — losing
+  // the static/SSG generation verified on the homepage and product pages.
+  // The cart is fetched instead from the isolated /api/cart route, which is
+  // the only thing that opts out of caching.
   return (
     <html
       lang="en"
@@ -73,9 +81,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </noscript>
       </head>
       <body className="flex min-h-full flex-col bg-paper text-ink">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <CartProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <CartDrawer />
+        </CartProvider>
       </body>
     </html>
   );

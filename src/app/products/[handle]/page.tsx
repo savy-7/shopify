@@ -6,7 +6,6 @@ import Reveal from "@/components/ui/Reveal";
 import ProductCard from "@/components/product/ProductCard";
 import BuyBar from "@/components/product/BuyBar";
 import { getProductByHandle, getProducts, orderProducts } from "@/lib/shopify/products";
-import { variantNumericId } from "@/lib/shopify/checkout";
 import { formatMoney } from "@/lib/format";
 import {
   ACCENT_HEX,
@@ -51,12 +50,6 @@ export default async function ProductPage({ params }: PageProps<"/products/[hand
   const variant = product.variants.edges[0]?.node;
   const amount = Number(product.priceRange.minVariantPrice.amount);
   const images = product.images.edges.map((e) => e.node);
-
-  const storeDomain = process.env.SHOPIFY_STORE_DOMAIN ?? "";
-  const permalinkBase =
-    variant && storeDomain
-      ? `https://${storeDomain}/cart/${variantNumericId(variant.id)}`
-      : null;
 
   const related = orderProducts(await getProducts(24)).filter(
     (p) => p.handle !== product.handle
@@ -134,9 +127,9 @@ export default async function ProductPage({ params }: PageProps<"/products/[hand
             {amount > 0 ? formatMoney(product.priceRange.minVariantPrice) : "Price coming soon"}
           </p>
 
-          {permalinkBase && amount > 0 ? (
+          {variant && amount > 0 ? (
             <BuyBar
-              permalinkBase={permalinkBase}
+              variantId={variant.id}
               available={product.availableForSale}
               accentInk={accentInk}
             />
