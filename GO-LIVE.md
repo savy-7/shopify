@@ -45,26 +45,62 @@ Shopify-side restriction to match it.
 3. Once approved and connected, place one real order end-to-end on the live
    site and refund it, to confirm money actually moves before relying on it.
 
-### 0.3 Deploy to Vercel
+### 0.3 Deploy to Vercel, then point goodnesscrafted.com at it
 
 Code is already pushed to `github.com/savy-7/shopify` (branch `master`).
 
-1. Go to [vercel.com/new](https://vercel.com/new), sign in, **Import** the
-   `savy-7/shopify` repo.
-2. Before the first deploy, add these environment variables (Project
-   Settings → Environment Variables):
-   - `SHOPIFY_STORE_DOMAIN`
-   - `SHOPIFY_STOREFRONT_ACCESS_TOKEN`
-   - `NEXT_PUBLIC_SITE_URL` — your Vercel URL once you have it (e.g.
-     `https://shopify-savy-7.vercel.app`), or your real domain once DNS is
-     pointed. Customer accounts (§0.4) need this to be correct.
-   - Leave the five `SHOPIFY_CUSTOMER_ACCOUNT_*` variables blank for now —
-     the site works without them; sign-in just shows a "not set up yet"
-     message until §0.4 is done.
-3. Deploy. Send me the resulting URL and I'll do another pass of visual and
-   functional verification against the real deployment.
+**Checked this domain's actual DNS (2026-09-24), which changes the plan:**
+nameservers are Google Cloud DNS (from Google Domains) — not Shopify, despite
+Vercel's prompt. The apex A record points at Shopify's IP; `www` CNAMEs to
+`shops.myshopify.com`; and **there's live Google Workspace email on this
+domain** (MX → `smtp.google.com`). Two things follow from that:
 
-### 0.4 Set up customer accounts (once §0.3 has given you a URL)
+- **Don't use Vercel's "change nameservers" option.** That would hand Vercel
+  authority over every record on the domain, including the one your email
+  depends on. Vercel supports a safer alternative — editing just the A/CNAME
+  record at your current DNS host — which leaves email and everything else
+  untouched. Use that instead.
+- **Checkout currently runs on goodnesscrafted.com itself**, because that's
+  Shopify's "primary domain." The moment the apex A record points at Vercel,
+  requests to `/checkouts/...` would hit the Next.js app instead of Shopify
+  and break checkout entirely — unless the primary-domain setting is switched
+  first. Steps below are ordered to avoid that.
+
+**Do it in this order:**
+
+1. [vercel.com/new](https://vercel.com/new) → **Import** `savy-7/shopify` →
+   add env vars (`SHOPIFY_STORE_DOMAIN`, `SHOPIFY_STOREFRONT_ACCESS_TOKEN`,
+   and `NEXT_PUBLIC_SITE_URL` set to the `*.vercel.app` URL Vercel gives you)
+   → **Deploy**. Don't add the custom domain in Vercel yet.
+2. On that `*.vercel.app` URL: browse, add something to cart, click
+   Checkout, confirm it reaches Shopify and you can get through payment.
+   This proves the integration works before any DNS is touched.
+3. Shopify admin → **Settings → Domains** → find `goodnesscrafted.com` →
+   change the primary domain to your `{shop}.myshopify.com` address instead
+   (look for a "set as primary" option on that domain, or a menu to remove it
+   as primary — exact wording may vary). This makes new checkout links use
+   `myshopify.com` instead of your domain, which is what frees the apex up.
+4. Re-test step 2 once more — the checkout URL it lands on should now read
+   `{shop}.myshopify.com/checkouts/...` instead of `goodnesscrafted.com`.
+5. Vercel → your project → **Settings → Domains** → add `goodnesscrafted.com`
+   and `www.goodnesscrafted.com`. Vercel shows you the exact A record IP and
+   a per-project `www` CNAME target — use those exact values, not generic
+   ones from elsewhere.
+6. At your **current DNS host** (Google Domains / Google Cloud DNS — search
+   for wherever you manage this domain's records today, not Vercel): edit
+   only the apex **A** record to Vercel's IP and the **www CNAME** to
+   Vercel's target. Leave the MX record and the `google-site-verification`
+   TXT record exactly as they are.
+7. Wait for it to propagate (minutes to a few hours), then check
+   `goodnesscrafted.com` loads the new site and a real checkout still
+   completes.
+8. Update `NEXT_PUBLIC_SITE_URL` in Vercel to `https://goodnesscrafted.com`
+   and redeploy, before doing §0.4.
+
+Send me the URL after step 1 and I'll run a full verification pass against
+the real deployment while you work through the rest.
+
+### 0.4 Set up customer accounts (after §0.3 step 8 — needs the final domain)
 
 1. Shopify admin → **Settings → Customer accounts** → turn accounts on.
 2. **Sales channels → Headless** → your storefront → **Customer Account API
