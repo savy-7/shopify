@@ -3,8 +3,80 @@
 Everything outstanding before this storefront can replace goodnesscrafted.com.
 
 Findings marked **(verified)** were read from your live Shopify store via the
-Storefront API on 2026-09-23, not assumed. Anything marked **(check)** I could
-not see from outside the admin and you need to confirm.
+Storefront API, not assumed. Anything marked **(check)** I could not see from
+outside the admin and you need to confirm.
+
+**Status as of 2026-09-24:** persistent cart and customer accounts are built
+(§5). Code is pushed to `github.com/savy-7/shopify`. Still needed from you:
+restrict shipping to India (§0.1), connect Razorpay (§0.2), import the repo
+into Vercel and set env vars (§7), then set real prices/stock (§1).
+
+---
+
+## 0. Things only you can do in Shopify/Vercel/Razorpay — do these first
+
+### 0.1 Restrict shipping to India only
+
+*Shopify admin → Settings → Shipping and delivery.*
+
+1. Under **Shipping profiles**, open the profile that currently has your
+   international zones (§4 below lists the 29 countries it's set to).
+2. For every zone that isn't India: click the **⋮** menu on that zone →
+   **Delete** → **Save**.
+3. If there's no India-only zone yet: **Add zone** → name it "India" → select
+   only India → **Done**.
+4. On the India zone, **Add shipping option** and set your rate (flat,
+   weight-based, or order-amount-based) → **Done** → **Save**.
+5. Test: add a product to cart and go to checkout with an Indian address —
+   only your India rate should show.
+
+The cart already sends `buyerIdentity.countryCode: "IN"` on every order
+(built this session), so the frontend side of this is done — this is the
+Shopify-side restriction to match it.
+
+### 0.2 Connect Razorpay
+
+1. Shopify admin → **Settings → Payments** → find **Razorpay** under
+   third-party providers (or install it from the Shopify App Store first if
+   it's not listed).
+2. Razorpay will ask for your own business KYC — PAN, GST (if applicable),
+   bank account, business proof. This is between you and Razorpay; I have no
+   access to it and can't do it for you.
+3. Once approved and connected, place one real order end-to-end on the live
+   site and refund it, to confirm money actually moves before relying on it.
+
+### 0.3 Deploy to Vercel
+
+Code is already pushed to `github.com/savy-7/shopify` (branch `master`).
+
+1. Go to [vercel.com/new](https://vercel.com/new), sign in, **Import** the
+   `savy-7/shopify` repo.
+2. Before the first deploy, add these environment variables (Project
+   Settings → Environment Variables):
+   - `SHOPIFY_STORE_DOMAIN`
+   - `SHOPIFY_STOREFRONT_ACCESS_TOKEN`
+   - `NEXT_PUBLIC_SITE_URL` — your Vercel URL once you have it (e.g.
+     `https://shopify-savy-7.vercel.app`), or your real domain once DNS is
+     pointed. Customer accounts (§0.4) need this to be correct.
+   - Leave the five `SHOPIFY_CUSTOMER_ACCOUNT_*` variables blank for now —
+     the site works without them; sign-in just shows a "not set up yet"
+     message until §0.4 is done.
+3. Deploy. Send me the resulting URL and I'll do another pass of visual and
+   functional verification against the real deployment.
+
+### 0.4 Set up customer accounts (once §0.3 has given you a URL)
+
+1. Shopify admin → **Settings → Customer accounts** → turn accounts on.
+2. **Sales channels → Headless** → your storefront → **Customer Account API
+   settings**.
+3. Under **Application setup**, add:
+   - **Callback URL:** `{your Vercel/domain URL}/api/auth/callback`
+   - **Logout URL:** `{your Vercel/domain URL}`
+4. Copy the **Client ID** and the **Authorization**, **Token**, and **Logout**
+   endpoint URLs shown there — verbatim, don't retype them.
+5. Add all five as Vercel environment variables (see `.env.local.example` for
+   the exact names) and redeploy.
+6. Test signing in at `/account`.
 
 ---
 
@@ -146,18 +218,23 @@ page. Nothing is faked — both say the sets aren't ready.
 
 ---
 
-## 5. Frontend — build work still outstanding
+## 5. Frontend — build work
 
-- [ ] **Persistent cart.** The biggest remaining piece. Buy now currently sends
-      one product straight to Shopify checkout via a cart permalink, so a
-      customer cannot combine items. Needs the Storefront Cart API: add, update
-      quantity, remove, a drawer, and a line-item count in the header (the
-      header badge is hard-coded to `0` today).
+Done this session:
+
+- [x] **Persistent cart** — Storefront Cart API, drawer, quantity/remove,
+      live header badge, direct multi-item Shopify checkout. Ships every cart
+      with `buyerIdentity.countryCode: "IN"`.
+- [x] **Customer accounts** — sign in, order history, sign out, via the
+      Customer Account API (OAuth 2.0 + PKCE). Built but **not yet tested
+      against a live store** — needs §0.3 and §0.4 done first. Degrades to a
+      clear "not set up yet" message rather than an error page until then.
+
+Still outstanding:
+
 - [ ] **Search.** Not built.
 - [ ] **Collection filtering and sorting** on `/shop`. Not built — it lists all
       products unfiltered. Fine for six SKUs, needed as the range grows.
-- [ ] **Customer accounts** — order history, profile. Your current site's nav has
-      Orders / Profile / Account; the new one does not.
 - [ ] **Newsletter signup.** Footer says "coming soon"; nothing is wired.
 - [ ] **Policy pages** — `/privacy`, `/terms`, `/shipping`, `/refund`. These
       exist in Shopify (once written) and should be pulled through the API
@@ -189,13 +266,11 @@ page. Nothing is faked — both say the sets aren't ready.
 
 ## 7. Deployment
 
-- [ ] **Host it.** Vercel is the natural fit for Next.js 16.
-- [ ] **Set environment variables** on the host — `SHOPIFY_STORE_DOMAIN` and
-      `SHOPIFY_STOREFRONT_ACCESS_TOKEN`. They are currently only in your local
-      `.env.local`, which is untracked. `.env.local.example` documents them.
+Hosting steps are in §0.3 above. Remaining once that's live:
+
 - [ ] **Rotate the Storefront token** if it has ever been pasted anywhere shared.
-- [ ] **Staging first.** Deploy to a preview URL and place a full test order
-      before touching DNS.
+- [ ] **Staging first.** Test on the Vercel preview URL — full cart, checkout,
+      and sign-in flow — before touching DNS.
 - [ ] **DNS cutover.** `goodnesscrafted.com` currently points at the Shopify
       theme. Moving it to the new frontend is the switch. Checkout stays on
       Shopify either way.
@@ -224,10 +299,10 @@ Not legal advice; flagging because this is packaged food sold in India.
 
 ## Suggested order
 
-1. Section 1 — prices, stock, weights, policies, payment test, the two
-   description problems.
-2. Section 2 — send me the email, socials and any missing copy.
-3. Section 7 — deploy to staging, place a test order.
-4. Section 5 — cart, then search and accounts.
+1. Section 0 — restrict shipping to India, connect Razorpay, deploy to
+   Vercel, then set up customer accounts.
+2. Section 1 — prices, stock, weights, policies, the two description problems.
+3. Section 2 — send me the email, socials and any missing copy.
+4. Section 5 — search and collection filtering, once the range grows.
 5. Section 6 — sitemap, robots, 404, OG image, favicon, analytics.
 6. DNS cutover.
