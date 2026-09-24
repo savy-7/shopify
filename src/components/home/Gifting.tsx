@@ -8,7 +8,7 @@ import Reveal from "@/components/ui/Reveal";
  */
 export default function Gifting() {
   return (
-    <section className="relative overflow-hidden bg-lime text-ink">
+    <section className="relative overflow-hidden bg-olive text-paper">
       <div
         aria-hidden="true"
         className="grain-layer pointer-events-none absolute inset-0 opacity-30"
@@ -20,7 +20,7 @@ export default function Gifting() {
             <p className="font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-ink/55">
               In preparation
             </p>
-            <h2 className="mt-6 max-w-3xl text-[2.4rem] leading-[0.95] font-extrabold tracking-[-0.035em] sm:text-5xl lg:text-[3.6rem]">
+            <h2 className="mt-6 max-w-3xl text-[2.4rem] leading-[0.95] font-semibold tracking-[-0.012em] sm:text-5xl lg:text-[3.6rem]">
               Gifting &amp;{" "}
               <span className="font-serif font-normal italic">hampers</span>, coming soon.
             </h2>

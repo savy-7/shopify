@@ -98,7 +98,7 @@ export default function ProductCard({
       </div>
 
       <div className="mt-4 flex items-baseline justify-between gap-4">
-        <h3 className="font-display text-base font-bold tracking-[-0.015em]">
+        <h3 className="font-display text-base font-bold tracking-[-0.006em]">
           {product.title}
         </h3>
         <p className="shrink-0 font-numeral text-sm tabular-nums" style={{ color: "var(--accent-ink)" }}>

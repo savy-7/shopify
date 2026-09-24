@@ -66,7 +66,7 @@ export default function CartDrawer() {
           <h2
             ref={headingRef}
             tabIndex={-1}
-            className="font-display text-lg font-extrabold tracking-[-0.02em] outline-none"
+            className="font-display text-lg font-semibold tracking-[-0.008em] outline-none"
           >
             Your cart{cart && cart.totalQuantity > 0 ? ` (${cart.totalQuantity})` : ""}
           </h2>
@@ -126,7 +126,7 @@ export default function CartDrawer() {
                   <div className="flex flex-1 flex-col justify-between">
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <p className="flex items-center gap-1.5 font-display text-sm font-bold tracking-[-0.01em]">
+                        <p className="flex items-center gap-1.5 font-display text-sm font-bold tracking-[-0.005em]">
                           <NutIcon
                             name={iconForHandle(handle)}
                             className="h-3.5 w-3.5 shrink-0"

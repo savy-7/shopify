@@ -21,12 +21,12 @@ export default function Story() {
             <p className="font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-paper/45">
               From us to you
             </p>
-            <blockquote className="mt-7 text-[2rem] leading-[1.05] font-extrabold tracking-[-0.03em] sm:text-[2.6rem]">
-              <span className="font-serif font-normal italic text-lime">
+            <blockquote className="mt-7 text-[2rem] leading-[1.05] font-semibold tracking-[-0.005em] sm:text-[2.6rem]">
+              <span className="font-serif font-normal italic text-olive">
                 {PROMISE}
               </span>
             </blockquote>
-            <span className="mt-9 block h-px w-24 bg-lime" />
+            <span className="mt-9 block h-px w-24 bg-olive" />
           </Reveal>
 
           <div className="space-y-6">
@@ -41,7 +41,7 @@ export default function Story() {
             <Reveal delay={FOUNDER_MESSAGE.length * 110}>
               <Link
                 href="/about"
-                className="mt-4 inline-block font-numeral text-[0.68rem] uppercase tracking-[0.2em] text-paper underline decoration-paper/30 underline-offset-[7px] transition-colors hover:decoration-lime"
+                className="mt-4 inline-block font-numeral text-[0.68rem] uppercase tracking-[0.2em] text-paper underline decoration-paper/30 underline-offset-[7px] transition-colors hover:decoration-olive"
               >
                 Read our philosophy
               </Link>

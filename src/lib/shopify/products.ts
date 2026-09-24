@@ -1,4 +1,4 @@
-import { shopifyFetch } from "./client";
+import { shopifyFetch, PRODUCTS_TAG } from "./client";
 import { PRODUCT_BY_HANDLE_QUERY, PRODUCTS_QUERY } from "./queries";
 import type { Product } from "./types";
 import { SPECIMEN_ORDER } from "@/lib/brand/palette";
@@ -12,6 +12,7 @@ export async function getProductByHandle(handle: string): Promise<Product | null
     const data = await shopifyFetch<{ product: Product | null }, { handle: string }>({
       query: PRODUCT_BY_HANDLE_QUERY,
       variables: { handle },
+      tags: [PRODUCTS_TAG],
     });
     return data.product;
   } catch (error) {
@@ -43,6 +44,7 @@ export async function getProducts(first = 20): Promise<Product[]> {
     >({
       query: PRODUCTS_QUERY,
       variables: { first },
+      tags: [PRODUCTS_TAG],
     });
     return data.products.edges.map((edge) => edge.node);
   } catch (error) {

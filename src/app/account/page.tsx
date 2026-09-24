@@ -44,7 +44,7 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
           <p className="font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-ink/45">
             Account
           </p>
-          <h1 className="mt-4 text-4xl font-extrabold tracking-[-0.03em]">
+          <h1 className="mt-4 text-4xl font-semibold tracking-[-0.005em]">
             {customer.firstName ? `Hi, ${customer.firstName}` : "Your account"}
           </h1>
           {customer.emailAddress && (
@@ -61,7 +61,7 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
       </div>
 
       <Reveal delay={100} className="mt-12">
-        <h2 className="text-xl font-bold tracking-[-0.02em]">Order history</h2>
+        <h2 className="text-xl font-bold tracking-[-0.008em]">Order history</h2>
 
         {orders.length === 0 ? (
           <p className="mt-4 text-ink/50">No orders yet.</p>
@@ -94,7 +94,7 @@ function SignedOut({ notConfigured }: { notConfigured: boolean }) {
   return (
     <div className="mx-auto max-w-md px-5 py-24 text-center sm:px-8">
       <Reveal>
-        <h1 className="text-4xl font-extrabold tracking-[-0.03em]">Sign in</h1>
+        <h1 className="text-4xl font-semibold tracking-[-0.005em]">Sign in</h1>
         <p className="mt-4 text-ink/60">View your orders and manage your account.</p>
 
         {notConfigured ? (

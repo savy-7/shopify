@@ -1,9 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  /* Base surfaces */
-  --color-paper: #faf9f6;
-  --color-ink: #141414;
+  /* Base surfaces. Warm bone rather than near-white, and espresso rather
+     than black — the range photographs warm, and a cool grey frame fought it. */
+  --color-paper: #f4efe6;
+  --color-ink: #33200f;
+  /* Slightly deeper surface for cards and insets against the bone. */
+  --color-stone: #eae2d5;
 
   /* Category accents — sampled from the actual printed packaging so the UI
      never fights the product photography. See src/lib/brand/palette.ts. */
@@ -14,11 +17,14 @@
   --color-date: #1b2436;
   --color-pistachio: #738b1d;
 
-  /* Brand accent, used sparingly across the whole site */
-  --color-lime: #c4e03d;
+  /* Brand accent. Olive picks up the botanical linework and the pistachio
+     pack; the previous lime read as energetic but sat outside the range's
+     own colour story. */
+  --color-olive: #7a8450;
+  --color-olive-deep: #5c6539;
 
   --font-display: var(--font-display);
-  --font-serif: var(--font-serif);
+  --font-serif: var(--font-display);
   --font-body: var(--font-body);
   --font-numeral: var(--font-mono);
 }
@@ -32,10 +38,12 @@
   --color-raisin: var(--color-raisin);
   --color-date: var(--color-date);
   --color-pistachio: var(--color-pistachio);
-  --color-lime: var(--color-lime);
+  --color-stone: var(--color-stone);
+  --color-olive: var(--color-olive);
+  --color-olive-deep: var(--color-olive-deep);
 
   --font-display: var(--font-display);
-  --font-serif: var(--font-serif);
+  --font-serif: var(--font-display);
   --font-body: var(--font-body);
   --font-numeral: var(--font-numeral);
 }
@@ -240,7 +248,7 @@ h3 {
   left: 0;
   right: 0;
   height: 50.5%;
-  background: var(--color-lime);
+  background: var(--color-olive);
   will-change: transform;
 }
 

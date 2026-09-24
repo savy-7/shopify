@@ -9,7 +9,7 @@ export default function Closing() {
         <p className="font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-ink/40">
           {PACK_LINE}
         </p>
-        <p className="mt-9 text-[1.8rem] leading-[1.15] font-extrabold tracking-[-0.03em] text-balance sm:text-[2.6rem] lg:text-[3.1rem]">
+        <p className="mt-9 text-[1.8rem] leading-[1.15] font-semibold tracking-[-0.005em] text-balance sm:text-[2.6rem] lg:text-[3.1rem]">
           {CLOSING}
         </p>
       </Reveal>

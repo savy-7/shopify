@@ -15,7 +15,7 @@ export default function AboutPage() {
           Founder&rsquo;s message
         </p>
         <h1
-          className="animate-rise mt-6 max-w-4xl text-[2.8rem] leading-[0.92] font-extrabold tracking-[-0.04em] sm:text-6xl lg:text-7xl"
+          className="animate-rise mt-6 max-w-4xl text-[2.8rem] leading-[0.92] font-semibold tracking-[-0.015em] sm:text-6xl lg:text-7xl"
           style={{ animationDelay: "90ms" }}
         >
           Goodness,{" "}
@@ -43,10 +43,10 @@ export default function AboutPage() {
           <ol className="mt-14 grid gap-12 sm:grid-cols-3 sm:gap-8">
             {PHILOSOPHY.map((item, i) => (
               <Reveal as="li" key={item.title} delay={i * 130}>
-                <p className="font-numeral text-[0.66rem] tracking-[0.2em] text-lime">
+                <p className="font-numeral text-[0.66rem] tracking-[0.2em] text-olive">
                   {String(i + 1).padStart(2, "0")}
                 </p>
-                <h2 className="mt-5 text-2xl font-bold tracking-[-0.02em]">{item.title}</h2>
+                <h2 className="mt-5 text-2xl font-bold tracking-[-0.008em]">{item.title}</h2>
                 <p className="mt-4 max-w-xs leading-relaxed text-paper/65">{item.body}</p>
               </Reveal>
             ))}

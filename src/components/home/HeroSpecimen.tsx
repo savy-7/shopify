@@ -93,7 +93,7 @@ export default function HeroSpecimen({ specimens }: { specimens: Specimen[] }) {
               Goodness Crafted — India
             </p>
             <h1
-              className="animate-rise mt-5 text-[2.6rem] leading-[0.92] font-extrabold tracking-[-0.035em] sm:text-6xl lg:text-[4.1rem]"
+              className="animate-rise mt-5 text-[2.6rem] leading-[0.92] font-semibold tracking-[-0.012em] sm:text-6xl lg:text-[4.1rem]"
               style={{ animationDelay: "90ms" }}
             >
               Crafting{" "}
@@ -129,7 +129,7 @@ export default function HeroSpecimen({ specimens }: { specimens: Specimen[] }) {
           <span
             key={`name-${active.handle}`}
             aria-hidden="true"
-            className="animate-nameplate pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[54%] text-[clamp(4.5rem,20vw,17rem)] leading-none font-extrabold tracking-[-0.045em] whitespace-nowrap uppercase"
+            className="animate-nameplate pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[54%] text-[clamp(4.5rem,20vw,17rem)] leading-none font-semibold tracking-[-0.006em] whitespace-nowrap uppercase"
             style={{
               WebkitTextStroke: "clamp(1px, 0.16vw, 3px) var(--accent)",
               color: "transparent",

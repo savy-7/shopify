@@ -15,7 +15,7 @@ export default function ContactPage() {
           Contact
         </p>
         <h1
-          className="animate-rise mt-6 text-[2.8rem] leading-[0.92] font-extrabold tracking-[-0.04em] sm:text-6xl"
+          className="animate-rise mt-6 text-[2.8rem] leading-[0.92] font-semibold tracking-[-0.015em] sm:text-6xl"
           style={{ animationDelay: "90ms" }}
         >
           Say <span className="font-serif font-normal italic text-ink/45">hello.</span>

@@ -2,37 +2,20 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/shopify/types";
 import { ACCENT_HEX, accentFor, packClassName } from "@/lib/brand/palette";
-import { MISSION } from "@/lib/brand/content";
-import NutIcon, { type NutIconName } from "@/components/ui/NutIcon";
+import { MISSION, PACK_LINE } from "@/lib/brand/content";
+import Botanical from "@/components/ui/Botanical";
 import RotatingSeal from "@/components/ui/RotatingSeal";
 
 /**
- * Icons set around the photograph. Hand-placed rather than distributed evenly —
- * an even ring reads as a loading spinner. Each drifts on its own delay so the
- * group never pulses in unison.
- */
-const FLOATERS: {
-  name: NutIconName;
-  accent: keyof typeof ACCENT_HEX;
-  className: string;
-  tilt: number;
-  delay: number;
-}[] = [
-  { name: "almond", accent: "almond", className: "-left-5 top-[12%] h-10 w-10", tilt: -14, delay: 0 },
-  { name: "pistachio", accent: "pistachio", className: "-right-4 top-[38%] h-11 w-11", tilt: 12, delay: 900 },
-  { name: "date", accent: "date", className: "-right-2 -bottom-4 h-9 w-9", tilt: -9, delay: 1800 },
-];
-
-/**
- * Page opening: brand line beside the table photograph, then the range as a
- * shelf of clickable packs.
+ * Page opening.
  *
- * The photograph runs at its own 1312:1199 ratio with no crop — an earlier
- * version cut a wide banner into a portrait arch and showed about a fifth of
- * the scene, which is the mistake this avoids.
+ * Reworked around the botanical-plate reference: a letterspaced line, a serif
+ * statement, hand-drawn linework framing the photograph, and the range laid
+ * out below as a shelf of clickable packs. The photograph runs at its own
+ * 1312:1199 ratio with no crop.
  *
- * Everything is above the fold, so entrances run on load rather than on scroll,
- * with delays offset past the intro curtain so the sequence continues where it
+ * Everything is above the fold, so entrances run on load rather than on
+ * scroll, offset past the intro curtain so the sequence continues where it
  * ends.
  */
 export default function Opening({ products }: { products: Product[] }) {
@@ -44,22 +27,28 @@ export default function Opening({ products }: { products: Product[] }) {
       />
 
       <div className="mx-auto w-full max-w-[110rem] px-5 sm:px-8">
-        <div className="grid items-center gap-14 pt-12 lg:grid-cols-[1fr_0.95fr] lg:gap-12 lg:pt-14">
+        <div className="grid items-center gap-14 pt-12 lg:grid-cols-[1fr_0.95fr] lg:gap-16 lg:pt-16">
           <div>
             <p
-              className="animate-rise font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-ink/45"
+              className="animate-rise font-numeral text-[0.62rem] uppercase tracking-[0.42em] text-ink/40"
               style={{ animationDelay: "780ms" }}
             >
-              Est. India — Nuts, dry fruits &amp; blends
+              {PACK_LINE.replace(/\.$/, "")}
             </p>
 
-            <h1 className="mt-6 text-[clamp(2.9rem,6.4vw,5.8rem)] leading-[0.89] font-extrabold tracking-[-0.045em]">
+            <Botanical
+              name="sprig-pair"
+              className="animate-rise mt-6 h-[14px] w-[140px] text-ink/30"
+              style={{ animationDelay: "840ms" }}
+            />
+
+            <h1 className="mt-7 text-[clamp(3.1rem,7vw,6.2rem)] leading-[0.98] font-normal tracking-[-0.015em]">
               <span className="animate-rise block" style={{ animationDelay: "880ms" }}>
                 Goodness,
               </span>
               <span
-                className="animate-rise block font-serif text-[0.95em] font-normal italic text-ink/45"
-                style={{ animationDelay: "990ms" }}
+                className="animate-rise block italic"
+                style={{ animationDelay: "990ms", color: "var(--color-olive-deep)" }}
               >
                 thoughtfully
               </span>
@@ -69,7 +58,7 @@ export default function Opening({ products }: { products: Product[] }) {
                 className="animate-rise block"
                 style={{
                   animationDelay: "1100ms",
-                  WebkitTextStroke: "clamp(1px, 0.12vw, 2px) var(--color-ink)",
+                  WebkitTextStroke: "clamp(0.75px, 0.09vw, 1.5px) var(--color-ink)",
                   color: "transparent",
                 }}
               >
@@ -78,37 +67,45 @@ export default function Opening({ products }: { products: Product[] }) {
             </h1>
 
             <p
-              className="animate-rise mt-8 max-w-md text-lg leading-relaxed text-ink/65"
+              className="animate-rise mt-9 max-w-md text-lg leading-relaxed text-ink/60"
               style={{ animationDelay: "1210ms" }}
             >
               {MISSION}
             </p>
 
             <div
-              className="animate-rise mt-9 flex flex-wrap items-center gap-6"
+              className="animate-rise mt-10 flex flex-wrap items-center gap-7"
               style={{ animationDelay: "1300ms" }}
             >
               <Link
                 href="/shop"
-                className="rounded-full bg-ink px-8 py-4 font-numeral text-[0.7rem] uppercase tracking-[0.2em] text-paper transition-transform duration-500 ease-[var(--ease-brand)] hover:scale-[1.04]"
+                className="rounded-full bg-ink px-9 py-4 font-numeral text-[0.68rem] uppercase tracking-[0.22em] text-paper transition-transform duration-500 ease-[var(--ease-brand)] hover:scale-[1.04]"
               >
                 Shop the range
               </Link>
               <Link
                 href="/about"
-                className="font-numeral text-[0.7rem] uppercase tracking-[0.2em] underline decoration-ink/25 underline-offset-[7px] transition-colors hover:decoration-ink"
+                className="font-numeral text-[0.68rem] uppercase tracking-[0.22em] underline decoration-ink/25 underline-offset-[7px] transition-colors hover:decoration-ink"
               >
                 Our story
               </Link>
             </div>
           </div>
 
-          {/* Shown whole at its own ratio: a plain rounded frame rather than a
-              cut-out shape, so none of the scene is hidden. */}
+          {/* Photograph, framed by linework rather than a hard container edge. */}
           <div className="relative mx-auto w-full max-w-[600px]">
+            <Botanical
+              name="branch"
+              className="animate-rise pointer-events-none absolute -top-14 right-2 hidden h-[70px] w-[140px] text-ink/30 lg:block"
+              style={{ animationDelay: "1500ms" }}
+            />
+
             <div
               className="relative aspect-[1312/1199] w-full overflow-hidden rounded-[2rem]"
-              style={{ animation: "unveil 1.05s var(--ease-brand) 0.75s both" }}
+              style={{
+                animation: "unveil 1.05s var(--ease-brand) 0.75s both",
+                boxShadow: "0 30px 70px -40px color-mix(in oklab, var(--color-ink) 55%, transparent)",
+              }}
             >
               <Image
                 src="/brand/table-scene.webp"
@@ -120,26 +117,6 @@ export default function Opening({ products }: { products: Product[] }) {
               />
             </div>
 
-            {FLOATERS.map((floater) => (
-              <span
-                key={floater.name}
-                aria-hidden="true"
-                className={`animate-rise pointer-events-none absolute hidden lg:block ${floater.className}`}
-                style={{ animationDelay: `${1450 + floater.delay / 6}ms` }}
-              >
-                <span
-                  className="animate-drift block h-full w-full"
-                  style={{
-                    ["--drift-tilt" as string]: `${floater.tilt}deg`,
-                    animationDelay: `${floater.delay}ms`,
-                    color: ACCENT_HEX[floater.accent],
-                  }}
-                >
-                  <NutIcon name={floater.name} className="h-full w-full" strokeWidth={1.3} />
-                </span>
-              </span>
-            ))}
-
             <RotatingSeal
               className="animate-rise absolute bottom-5 -left-6 hidden h-24 w-24 sm:block lg:-left-10 lg:h-28 lg:w-28"
               style={{ animationDelay: "1500ms" }}
@@ -150,7 +127,7 @@ export default function Opening({ products }: { products: Product[] }) {
 
       {/* The shelf. Packs are cropped by the section edge so the row reads as
           continuing past the fold, which is also the scroll invitation. */}
-      <div className="relative mt-8 h-[clamp(105px,13vw,180px)]">
+      <div className="relative mt-12 h-[clamp(105px,13vw,180px)]">
         {/* Six packs do not fit a phone at a readable size. Rather than shrink
             them to thumbnails or clip the outer two out of reach, the row
             scrolls below sm and centres once there is room. */}

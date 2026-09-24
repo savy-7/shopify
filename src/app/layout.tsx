@@ -1,29 +1,22 @@
 import type { Metadata } from "next";
-import {
-  Bricolage_Grotesque,
-  Fraunces,
-  Instrument_Sans,
-  Azeret_Mono,
-} from "next/font/google";
+import { Fraunces, Instrument_Sans, Azeret_Mono } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
 import "./globals.css";
 
-/** Editorial grotesque with real quirk in the letterforms — carries the display type. */
-const display = Bricolage_Grotesque({
+/**
+ * Fraunces carries the display type now, upright and italic both. The
+ * range photographs as warm and editorial, and a high-contrast serif sits
+ * with that in a way the previous geometric grotesque didn't — it also
+ * echoes the serif already printed on the packs.
+ */
+const display = Fraunces({
   variable: "--font-display",
   subsets: ["latin"],
-  display: "swap",
-});
-
-/** Wonky serif, used only for accent words. Echoes the serif in the printed logo. */
-const serif = Fraunces({
-  variable: "--font-serif",
-  subsets: ["latin"],
-  style: ["italic"],
-  axes: ["SOFT", "WONK"],
+  style: ["normal", "italic"],
+  axes: ["SOFT", "WONK", "opsz"],
   display: "swap",
 });
 
@@ -67,7 +60,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${display.variable} ${serif.variable} ${body.variable} ${mono.variable} h-full antialiased`}
+      className={`${display.variable} ${body.variable} ${mono.variable} h-full antialiased`}
     >
       <head>
         {/* Scroll reveals start transparent. Without scripting nothing would

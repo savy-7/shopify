@@ -26,7 +26,7 @@ export default function Ticker({ items }: { items: string[] }) {
                 <span className="px-7">{item}</span>
                 <NutIcon
                   name={SEPARATORS[i % SEPARATORS.length]}
-                  className="h-4 w-4 shrink-0 text-lime"
+                  className="h-4 w-4 shrink-0 text-olive"
                   strokeWidth={1.6}
                 />
               </li>

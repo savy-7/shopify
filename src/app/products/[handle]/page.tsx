@@ -1,10 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Reveal from "@/components/ui/Reveal";
 import ProductCard from "@/components/product/ProductCard";
 import BuyBar from "@/components/product/BuyBar";
+import ProductGallery from "@/components/product/ProductGallery";
 import { getProductByHandle, getProducts, orderProducts } from "@/lib/shopify/products";
 import { formatMoney } from "@/lib/format";
 import {
@@ -12,8 +12,6 @@ import {
   ACCENT_TEXT_HEX,
   SPECIMEN_ORDER,
   accentFor,
-  packClassName,
-  shortNameFor,
 } from "@/lib/brand/palette";
 
 export function generateStaticParams() {
@@ -72,42 +70,12 @@ export default async function ProductPage({ params }: PageProps<"/products/[hand
       </div>
 
       <div className="mx-auto grid max-w-[110rem] gap-12 px-5 py-10 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:py-14">
-        {/* Gallery */}
-        <div className="space-y-4">
-          {images.map((image, i) => (
-            <div
-              key={image.url}
-              className="relative flex items-center justify-center overflow-hidden rounded-[2rem] py-6"
-              style={{
-                backgroundColor:
-                  "color-mix(in oklab, var(--accent) 9%, var(--color-paper))",
-              }}
-            >
-              {i === 0 && (
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-[clamp(3rem,11vw,7rem)] leading-none font-extrabold tracking-[-0.045em] whitespace-nowrap uppercase"
-                  style={{
-                    WebkitTextStroke: "clamp(1px, 0.1vw, 2px) var(--accent)",
-                    color: "transparent",
-                    opacity: 0.55,
-                  }}
-                >
-                  {shortNameFor(product.handle, product.title)}
-                </span>
-              )}
-              <Image
-                src={image.url}
-                alt={image.altText ?? `${product.title} — view ${i + 1}`}
-                width={image.width}
-                height={image.height}
-                priority={i === 0}
-                sizes="(max-width: 1024px) 92vw, 44vw"
-                className={`${packClassName(product.handle)} relative w-auto max-w-[78%]`}
-              />
-            </div>
-          ))}
-        </div>
+        <ProductGallery
+          images={images}
+          handle={product.handle}
+          title={product.title}
+          accent={accentHex}
+        />
 
         {/* Info. Sticks alongside the gallery on desktop so the buy action stays
             reachable while the images scroll. */}
@@ -116,7 +84,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[hand
             Net wt. 250 g — 100% veg
           </p>
 
-          <h1 className="mt-5 text-[2.4rem] leading-[0.95] font-extrabold tracking-[-0.035em] sm:text-5xl">
+          <h1 className="mt-5 text-[2.4rem] leading-[0.95] font-semibold tracking-[-0.012em] sm:text-5xl">
             {product.title}
           </h1>
 
@@ -160,7 +128,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[hand
       {related.length > 0 && (
         <section className="mx-auto max-w-[110rem] px-5 py-20 sm:px-8 lg:py-28">
           <Reveal className="border-b border-ink/10 pb-8">
-            <h2 className="text-[2rem] leading-[0.95] font-extrabold tracking-[-0.03em] sm:text-4xl">
+            <h2 className="text-[2rem] leading-[0.95] font-semibold tracking-[-0.005em] sm:text-4xl">
               More from the range
             </h2>
           </Reveal>

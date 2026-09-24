@@ -31,7 +31,7 @@ export default async function Footer() {
       <div className="mx-auto max-w-[110rem] px-5 py-16 sm:px-8 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div>
-            <p className="font-display text-2xl font-extrabold tracking-[-0.03em]">
+            <p className="font-display text-2xl font-semibold tracking-[-0.005em]">
               Goodness Crafted
             </p>
             <p className="mt-3 max-w-xs leading-relaxed text-ink/55">{TAGLINE}</p>

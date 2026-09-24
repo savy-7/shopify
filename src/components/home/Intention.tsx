@@ -13,7 +13,7 @@ export default function Intention() {
           <p className="font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-ink/45">
             Crafted with intention
           </p>
-          <h2 className="mt-6 text-[2.4rem] leading-[0.95] font-extrabold tracking-[-0.035em] sm:text-5xl lg:text-[3.6rem]">
+          <h2 className="mt-6 text-[2.4rem] leading-[0.95] font-semibold tracking-[-0.012em] sm:text-5xl lg:text-[3.6rem]">
             Good food doesn&rsquo;t need to be{" "}
             <span className="font-serif font-normal italic text-ink/45">complicated.</span>
           </h2>
@@ -37,7 +37,7 @@ export default function Intention() {
                 {String(i + 1).padStart(2, "0")}
               </p>
             </div>
-            <h3 className="mt-5 text-xl font-bold tracking-[-0.02em]">{pillar.title}</h3>
+            <h3 className="mt-5 text-xl font-bold tracking-[-0.008em]">{pillar.title}</h3>
             <p className="mt-3 max-w-xs leading-relaxed text-ink/60">{pillar.body}</p>
           </Reveal>
         ))}

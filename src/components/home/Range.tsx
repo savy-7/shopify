@@ -11,7 +11,7 @@ export default function Range({ products }: { products: Product[] }) {
           <p className="font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-ink/45">
             The range
           </p>
-          <h2 className="mt-5 text-[2.4rem] leading-[0.95] font-extrabold tracking-[-0.035em] sm:text-5xl">
+          <h2 className="mt-5 text-[2.4rem] leading-[0.95] font-semibold tracking-[-0.012em] sm:text-5xl">
             Six packs. One standard.
           </h2>
         </div>

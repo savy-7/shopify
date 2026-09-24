@@ -1,5 +1,5 @@
 /**
- * Page-load curtain: two lime panels that split apart and clear the viewport.
+ * Page-load curtain: two olive panels that split apart and clear the viewport.
  *
  * Deliberately pure CSS with no JavaScript. A curtain driven by state could be
  * left covering the whole site if hydration fails, and one mounted after

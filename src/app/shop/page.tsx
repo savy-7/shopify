@@ -19,7 +19,7 @@ export default async function ShopPage() {
           The range — {String(products.length).padStart(2, "0")} products
         </p>
         <h1
-          className="animate-rise mt-6 text-[2.8rem] leading-[0.92] font-extrabold tracking-[-0.04em] sm:text-6xl lg:text-7xl"
+          className="animate-rise mt-6 text-[2.8rem] leading-[0.92] font-semibold tracking-[-0.015em] sm:text-6xl lg:text-7xl"
           style={{ animationDelay: "90ms" }}
         >
           Everything we{" "}
