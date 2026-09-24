@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Reveal from "@/components/ui/Reveal";
+import Botanical from "@/components/ui/Botanical";
 import { FOUNDER_MESSAGE, PROMISE } from "@/lib/brand/content";
 
 /**
@@ -26,7 +27,7 @@ export default function Story() {
                 {PROMISE}
               </span>
             </blockquote>
-            <span className="mt-9 block h-px w-24 bg-olive" />
+            <Botanical name="sprig-pair" className="mt-9 h-[13px] w-[130px] text-olive" />
           </Reveal>
 
           <div className="space-y-6">

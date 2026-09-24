@@ -1,5 +1,6 @@
 import Reveal from "@/components/ui/Reveal";
 import NutIcon, { type NutIconName } from "@/components/ui/NutIcon";
+import Botanical from "@/components/ui/Botanical";
 import { INTRO, PILLARS } from "@/lib/brand/content";
 
 /** One mark per pillar, drawn from the range rather than generic UI glyphs. */
@@ -13,6 +14,7 @@ export default function Intention() {
           <p className="font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-ink/45">
             Crafted with intention
           </p>
+          <Botanical name="sprig-pair" className="mt-5 h-[12px] w-[120px] text-ink/25" />
           <h2 className="mt-6 text-[2.4rem] leading-[0.95] font-semibold tracking-[-0.012em] sm:text-5xl lg:text-[3.6rem]">
             Good food doesn&rsquo;t need to be{" "}
             <span className="font-serif font-normal italic text-ink/45">complicated.</span>

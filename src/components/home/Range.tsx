@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Reveal from "@/components/ui/Reveal";
 import ProductCard from "@/components/product/ProductCard";
+import Botanical from "@/components/ui/Botanical";
 import type { Product } from "@/lib/shopify/types";
 
 export default function Range({ products }: { products: Product[] }) {
@@ -11,6 +12,7 @@ export default function Range({ products }: { products: Product[] }) {
           <p className="font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-ink/45">
             The range
           </p>
+          <Botanical name="sprig-pair" className="mt-4 h-[12px] w-[120px] text-ink/25" />
           <h2 className="mt-5 text-[2.4rem] leading-[0.95] font-semibold tracking-[-0.012em] sm:text-5xl">
             Six packs. One standard.
           </h2>

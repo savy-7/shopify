@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/ui/Reveal";
+import Botanical from "@/components/ui/Botanical";
 import { ADDRESS, SOCIALS } from "@/lib/brand/content";
 
 export const metadata: Metadata = {
@@ -14,6 +15,11 @@ export default function ContactPage() {
         <p className="animate-rise font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-ink/45">
           Contact
         </p>
+        <Botanical
+          name="sprig-pair"
+          className="animate-rise mt-5 h-[12px] w-[120px] text-ink/25"
+          style={{ animationDelay: "40ms" }}
+        />
         <h1
           className="animate-rise mt-6 text-[2.8rem] leading-[0.92] font-semibold tracking-[-0.015em] sm:text-6xl"
           style={{ animationDelay: "90ms" }}

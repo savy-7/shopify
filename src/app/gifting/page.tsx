@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/ui/Reveal";
+import Botanical from "@/components/ui/Botanical";
 
 export const metadata: Metadata = {
   title: "Gifting & Hampers",
@@ -19,6 +20,11 @@ export default function GiftingPage() {
         <p className="animate-rise font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-ink/45">
           In preparation
         </p>
+        <Botanical
+          name="sprig-pair"
+          className="animate-rise mt-5 h-[12px] w-[120px] text-ink/25"
+          style={{ animationDelay: "40ms" }}
+        />
         <h1
           className="animate-rise mt-6 max-w-3xl text-[2.8rem] leading-[0.92] font-semibold tracking-[-0.015em] sm:text-6xl"
           style={{ animationDelay: "90ms" }}

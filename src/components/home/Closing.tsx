@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Reveal from "@/components/ui/Reveal";
+import Botanical from "@/components/ui/Botanical";
 import { CLOSING, PACK_LINE } from "@/lib/brand/content";
 
 export default function Closing() {
@@ -9,6 +10,7 @@ export default function Closing() {
         <p className="font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-ink/40">
           {PACK_LINE}
         </p>
+        <Botanical name="sprig-pair" className="mx-auto mt-5 h-[13px] w-[130px] text-ink/25" />
         <p className="mt-9 text-[1.8rem] leading-[1.15] font-semibold tracking-[-0.005em] text-balance sm:text-[2.6rem] lg:text-[3.1rem]">
           {CLOSING}
         </p>

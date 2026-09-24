@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Reveal from "@/components/ui/Reveal";
+import Botanical from "@/components/ui/Botanical";
 
 /**
  * Placeholder for the hamper/combo range. These are the four archived SKUs,
@@ -20,6 +21,7 @@ export default function Gifting() {
             <p className="font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-ink/55">
               In preparation
             </p>
+            <Botanical name="sprig-pair" className="mt-5 h-[12px] w-[120px] text-paper/40" />
             <h2 className="mt-6 max-w-3xl text-[2.4rem] leading-[0.95] font-semibold tracking-[-0.012em] sm:text-5xl lg:text-[3.6rem]">
               Gifting &amp;{" "}
               <span className="font-serif font-normal italic">hampers</span>, coming soon.
