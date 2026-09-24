@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: "/gifting", label: "Gifting" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
+  { href: "/account", label: "Account" },
 ];
 
 export default function Header() {
