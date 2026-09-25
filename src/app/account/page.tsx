@@ -23,17 +23,22 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
     redirect("/api/auth/refresh?next=/account");
   }
 
-  const customer = await getCustomerAccount(session.accessToken);
+  const result = await getCustomerAccount(session.accessToken);
 
-  if (!customer) {
+  if (!result.ok) {
     return (
       <div className="mx-auto max-w-2xl px-5 py-24 text-center sm:px-8">
         <p className="text-ink/60">
           We couldn&rsquo;t load your account right now. Please try again shortly.
         </p>
+        {/* Shopify's own error text — safe to show, no secrets in it — so
+            this is diagnosable without needing to read server logs. */}
+        <p className="mt-3 font-numeral text-xs text-ink/35">{result.detail}</p>
       </div>
     );
   }
+
+  const customer = result.customer;
 
   const orders = customer.orders.edges.map((edge) => edge.node);
 

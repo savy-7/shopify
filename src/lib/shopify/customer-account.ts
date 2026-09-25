@@ -71,7 +71,18 @@ export type CustomerAccount = {
   orders: { edges: { node: CustomerOrder }[] };
 };
 
-export async function getCustomerAccount(accessToken: string): Promise<CustomerAccount | null> {
+export type CustomerAccountResult =
+  | { ok: true; customer: CustomerAccount }
+  | { ok: false; detail: string };
+
+/**
+ * Returns a typed failure reason rather than a bare `null`. Shopify's error
+ * text here (an HTTP status, a GraphQL error message) is safe to show a
+ * visitor — it never contains the access token or other secrets — and
+ * without it, a failure here was invisible outside Vercel's server logs,
+ * which isn't somewhere the person running this store can easily check.
+ */
+export async function getCustomerAccount(accessToken: string): Promise<CustomerAccountResult> {
   try {
     const res = await fetch(AUTH_CONFIG.apiUrl, {
       method: "POST",
@@ -85,19 +96,25 @@ export async function getCustomerAccount(accessToken: string): Promise<CustomerA
     });
 
     if (!res.ok) {
-      console.error(`[customer-account] HTTP ${res.status}:`, await res.text().catch(() => ""));
-      return null;
+      const text = await res.text().catch(() => "");
+      console.error(`[customer-account] HTTP ${res.status}:`, text);
+      return { ok: false, detail: `HTTP ${res.status}${text ? `: ${text.slice(0, 200)}` : ""}` };
     }
 
     const body = await res.json();
     if (body.errors) {
       console.error("[customer-account] GraphQL errors:", JSON.stringify(body.errors));
-      return null;
+      const message = body.errors[0]?.message ?? "Unknown GraphQL error";
+      return { ok: false, detail: message.slice(0, 200) };
     }
 
-    return body.data?.customer ?? null;
+    if (!body.data?.customer) {
+      return { ok: false, detail: "No customer in response" };
+    }
+
+    return { ok: true, customer: body.data.customer };
   } catch (error) {
     console.error("[customer-account] request failed:", error);
-    return null;
+    return { ok: false, detail: error instanceof Error ? error.message : "Request failed" };
   }
 }
