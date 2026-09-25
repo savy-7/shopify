@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/shopify/types";
 import {
@@ -9,24 +9,22 @@ import {
   shortNameFor,
 } from "@/lib/brand/palette";
 import { formatMoney } from "@/lib/format";
-import RotatingSeal from "@/components/ui/RotatingSeal";
 
 /**
- * Page opening: the table banner as a set, with the range standing on the
- * marble as if it were part of the photograph. Every pack is a link.
+ * Page opening: the range set into a photograph, every pack a link.
  *
- * Two coordinate sets, because the scene changes shape:
- * - wide (lg+): the banner at its own 2048:768 ratio, uncropped, so spots are
- *   percentages of the photograph itself and stay pinned to the tabletop at
- *   any width;
- * - compact: a taller crop of the empty middle of the table, where the text
- *   moves above the scene and names move to a row of chips beneath it.
+ * Two scenes, served with <picture> so each device downloads only its own:
+ * - wide (lg+): the podium banner at its full 2048:768 ratio, uncropped, one
+ *   pack standing on each of its seven podiums, copy centred on the wall
+ *   above and a name plaque on the marble in front of each podium;
+ * - compact: a taller crop of the table banner, packs in a staggered
+ *   two-depth row, copy above, names in a row of chips beneath.
+ * Spots are percentages of the scene, so on wide screens they are
+ * percentages of the photograph itself and stay on their podiums at any width.
  *
  * Packs must never overlap one another. Their photographs sit on opaque white,
  * which only drops out through `mix-blend-mode: multiply` — and multiply makes
- * one pack show through another wherever they cross. So the arrangement is a
- * staggered two-depth row (back row smaller and higher) with clear air
- * between neighbours, and it keeps off the bowls on the right.
+ * one pack show through another wherever they cross.
  *
  * For the same reason nothing between a pack and the photograph may create a
  * stacking context (no transform, opacity or z-index on the link): the blend
@@ -37,27 +35,42 @@ import RotatingSeal from "@/components/ui/RotatingSeal";
 type Spot = {
   /** Centre, as % of scene width. */
   x: number;
-  /** Where the pack stands, as % of scene height from the top. */
+  /** Bottom of the product photo, as % of scene height from the top. */
   b: number;
-  /** Pack height, as % of scene height. */
+  /** Product photo height, as % of scene height. */
   h: number;
-  /** Resting tilt in degrees; straightens on hover. */
-  tilt: number;
 };
 
-// Alternating front / back. The table's back edge is at 69% of the photo's
-// height; back-row packs stand just in front of it.
-const WIDE: Spot[] = [
-  { x: 19, b: 95, h: 31, tilt: -3 },
-  { x: 26, b: 80, h: 26, tilt: 2 },
-  { x: 32.5, b: 96, h: 31, tilt: 1.5 },
-  { x: 40.5, b: 79, h: 26, tilt: -2 },
-  { x: 47.8, b: 95, h: 31, tilt: -1 },
-  { x: 54.8, b: 80, h: 26, tilt: 2.5 },
-  { x: 61.6, b: 96, h: 31, tilt: -2 },
+/**
+ * The pack's base sits ~7.5% of the photo's height above its bottom edge (the
+ * rest is the soft shadow), so each photo drops that far below the surface it
+ * stands on. Measured across all seven product shots.
+ */
+const BASE_OFFSET = 0.075;
+const PACK_H = 35;
+
+/**
+ * Centre and top-surface height of each podium in the podium banner, measured
+ * off a 1% grid. Left to right: stone, wood, stone, wood, stone, wood, stone.
+ */
+const PODIUMS: [x: number, surface: number][] = [
+  [18.7, 71.8],
+  [29.6, 73.2],
+  [39.8, 74.0],
+  [49.5, 73.0],
+  [59.4, 73.6],
+  [69.6, 75.0],
+  [80.1, 72.1],
 ];
 
-const COMPACT: Spot[] = [
+const WIDE: Spot[] = PODIUMS.map(([x, surface]) => ({
+  x,
+  b: surface + PACK_H * BASE_OFFSET,
+  h: PACK_H,
+}));
+
+// Table banner, alternating front / back rows. Its table edge is at 69%.
+const COMPACT: (Spot & { tilt: number })[] = [
   { x: 14, b: 96, h: 28, tilt: -3 },
   { x: 26, b: 72, h: 23, tilt: 2 },
   { x: 38, b: 97, h: 28, tilt: 1.5 },
@@ -68,17 +81,36 @@ const COMPACT: Spot[] = [
 ];
 
 /**
- * Wall tone along the photograph's top edge, sampled from the banner, so the
+ * Wall tone along each photograph's top edge, sampled from the banners, so the
  * faded top of the photo runs into the page without a seam.
  */
 const WALL_WIDE =
-  "linear-gradient(90deg, #f8f0e3 0%, #f1e7d8 25%, #eaddcc 45%, #e2d2bd 62%, #e4d5c1 100%)";
+  "linear-gradient(90deg, #faf3e4 0%, #f3e5d1 20%, #dcc4a8 40%, #d3b99c 60%, #d8c2a6 80%, #dfccb3 100%)";
 const WALL_COMPACT = "#e9dccb";
 
+const SCENE_ALT = "Nuts and dry fruits in wooden bowls on a sunlit marble table";
+
 export default function Opening({ products }: { products: Product[] }) {
-  // Only as many packs as there are places on the table. The chips beneath
-  // the compact scene, and the plates and grid further down, list everything.
+  // Only as many packs as there are places. The chips beneath the compact
+  // scene, and the plates and grid further down, list everything.
   const placed = products.filter((p) => p.featuredImage).slice(0, WIDE.length);
+
+  const {
+    props: { srcSet: wideSrcSet },
+  } = getImageProps({
+    alt: SCENE_ALT,
+    src: "/brand/podium-banner.webp",
+    width: 2048,
+    height: 768,
+    sizes: "100vw",
+  });
+  const { props: compactImg } = getImageProps({
+    alt: SCENE_ALT,
+    src: "/brand/table-banner.webp",
+    width: 2048,
+    height: 768,
+    sizes: "(max-width: 640px) 220vw, 200vw",
+  });
 
   return (
     <section
@@ -93,9 +125,20 @@ export default function Opening({ products }: { products: Product[] }) {
         className="grain-layer pointer-events-none absolute inset-0 z-30 opacity-[0.3]"
       />
 
-      {/* Copy. In flow above the scene when compact; laid over the empty wall
-          on the left of the photograph when wide. */}
-      <div className="relative z-20 px-5 pt-10 sm:px-8 lg:absolute lg:inset-x-0 lg:top-0 lg:pt-[2.4vw] lg:pl-[3vw]">
+      {/* Copy. In flow above the scene when compact; centred on the wall above
+          the podiums when wide. */}
+      <div className="relative z-20 px-5 pt-10 sm:px-8 lg:absolute lg:inset-x-0 lg:top-0 lg:pt-[2.2vw] lg:text-center">
+        {/* A soft pool of wall-coloured light behind the copy. The olive
+            branches reach in from the right at headline height, and the
+            outlined "crafted." is unreadable over leaves without it. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute top-0 left-1/2 -z-10 hidden h-[17vw] w-[66vw] -translate-x-1/2 lg:block"
+          style={{
+            background:
+              "radial-gradient(closest-side, rgb(248 241 229 / 0.88), rgb(248 241 229 / 0.6) 55%, transparent)",
+          }}
+        />
         <p
           className="animate-rise font-numeral text-[0.62rem] uppercase tracking-[0.42em] text-ink/45"
           style={{ animationDelay: "780ms" }}
@@ -103,9 +146,9 @@ export default function Opening({ products }: { products: Product[] }) {
           Crafting goodness in every bite
         </p>
 
-        <h1 className="mt-5 text-[clamp(2.7rem,11vw,4.2rem)] leading-[0.98] font-normal tracking-[-0.015em] lg:mt-[1.1vw] lg:text-[4vw] lg:leading-[1.02]">
-          <span className="animate-rise block" style={{ animationDelay: "880ms" }}>
-            Goodness,
+        <h1 className="mt-5 text-[clamp(2.7rem,11vw,4.2rem)] leading-[0.98] font-normal tracking-[-0.015em] lg:mt-[0.9vw] lg:text-[3.3vw] lg:leading-[1.05]">
+          <span className="animate-rise block lg:inline" style={{ animationDelay: "880ms" }}>
+            Goodness,{" "}
           </span>
           <span
             className="animate-rise block italic lg:inline"
@@ -126,7 +169,7 @@ export default function Opening({ products }: { products: Product[] }) {
         </h1>
 
         <div
-          className="animate-rise mt-8 flex flex-wrap items-center gap-7 lg:mt-[1.5vw]"
+          className="animate-rise mt-8 flex flex-wrap items-center gap-7 lg:mt-[1.3vw] lg:justify-center"
           style={{ animationDelay: "1200ms" }}
         >
           <Link
@@ -142,43 +185,42 @@ export default function Opening({ products }: { products: Product[] }) {
             Our story
           </Link>
         </div>
+      </div>
 
+      {/* The scene. */}
+      <div className="pack-scene relative -mt-6 aspect-[5/6] sm:aspect-[16/11] lg:mt-[3vw] lg:aspect-[2048/768]">
+        <picture>
+          <source media="(min-width: 1024px)" srcSet={wideSrcSet} sizes="100vw" />
+          {/* next/image cannot switch sources by breakpoint; this is the
+              documented art-direction pattern (getImageProps + <picture>). */}
+          <img
+            {...compactImg}
+            alt={SCENE_ALT}
+            loading="eager"
+            fetchPriority="high"
+            className="absolute inset-0 h-full w-full object-cover object-[46%_50%] [mask-image:linear-gradient(to_bottom,transparent,black_16%)] sm:object-[28%_50%] lg:object-fill lg:[mask-image:linear-gradient(to_bottom,transparent,black_10%)]"
+          />
+        </picture>
+
+        {/* Compact: in the wall space above the packs. */}
         <p
-          className="animate-rise mt-6 hidden items-center gap-3 font-numeral text-[0.6rem] uppercase tracking-[0.28em] text-ink/45 xl:flex"
-          style={{ animationDelay: "2300ms" }}
+          className="animate-rise absolute top-[24%] left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 font-numeral text-[0.6rem] whitespace-nowrap uppercase tracking-[0.28em] text-ink/50 lg:hidden"
+          style={{ animationDelay: "1900ms" }}
         >
-          Pick a pack off the table
+          Tap a pack to explore
           <svg
-            viewBox="0 0 24 12"
+            viewBox="0 0 12 24"
             aria-hidden="true"
-            className="h-3 w-6 animate-[nudge_1.8s_ease-in-out_infinite]"
+            className="h-5 w-2.5 animate-[bob_1.8s_ease-in-out_infinite]"
             fill="none"
             stroke="currentColor"
             strokeWidth={1.2}
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <path d="M1 6h21M17 1.5 22 6l-5 4.5" />
+            <path d="M6 1v21M1.5 17 6 22l4.5-5" />
           </svg>
         </p>
-      </div>
-
-      {/* The scene. */}
-      <div className="pack-scene relative -mt-6 aspect-[5/6] sm:aspect-[16/11] lg:mt-[5vw] lg:aspect-[2048/768]">
-        <Image
-          src="/brand/table-banner.webp"
-          alt="Bowls of almonds, mixed nuts, cashews and raisins on a wooden board, on a sunlit marble table beneath olive branches"
-          fill
-          priority
-          sizes="(max-width: 640px) 220vw, (max-width: 1024px) 200vw, 100vw"
-          className="object-cover object-[46%_50%] [mask-image:linear-gradient(to_bottom,transparent,black_16%)] sm:object-[28%_50%] lg:object-fill"
-        />
-
-        {/* On the wall, centred, clear of the copy and above the packs. */}
-        <RotatingSeal
-          className="animate-rise absolute top-[22%] left-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-paper/90 shadow-[0_18px_40px_-24px_color-mix(in_oklab,var(--color-ink)_60%,transparent)] backdrop-blur-sm sm:h-28 sm:w-28 lg:top-[24%] lg:h-[8.5vw] lg:w-[8.5vw] lg:max-h-40 lg:max-w-40"
-          style={{ animationDelay: "1500ms" }}
-        />
 
         <ul>
           {placed.map((product, i) => (
@@ -189,38 +231,33 @@ export default function Opening({ products }: { products: Product[] }) {
 
       {/* Compact: names beneath the scene, since labels would collide over
           packs this close together. */}
-      <div className="relative z-20 lg:hidden">
-        <p className="px-5 pt-5 font-numeral text-[0.6rem] uppercase tracking-[0.28em] text-ink/45 sm:px-8">
-          Tap a pack to explore
-        </p>
-        <ul className="scrollbar-none flex gap-2 overflow-x-auto px-5 pt-3 pb-8 sm:px-8">
-          {products.map((product) => {
-            const amount = Number(product.priceRange.minVariantPrice.amount);
-            return (
-              <li key={product.handle} className="shrink-0">
-                <Link
-                  href={`/products/${product.handle}`}
-                  className="flex items-center gap-2 rounded-full bg-paper/80 px-3.5 py-2 backdrop-blur-sm"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="h-2 w-2 rounded-full"
-                    style={{ background: ACCENT_HEX[accentFor(product.handle)] }}
-                  />
-                  <span className="font-serif text-[0.95rem] italic">
-                    {shortNameFor(product.handle, product.title)}
+      <ul className="scrollbar-none relative z-20 flex gap-2 overflow-x-auto px-5 pt-5 pb-8 sm:px-8 lg:hidden">
+        {products.map((product) => {
+          const amount = Number(product.priceRange.minVariantPrice.amount);
+          return (
+            <li key={product.handle} className="shrink-0">
+              <Link
+                href={`/products/${product.handle}`}
+                className="flex items-center gap-2 rounded-full bg-paper/80 px-3.5 py-2 backdrop-blur-sm"
+              >
+                <span
+                  aria-hidden="true"
+                  className="h-2 w-2 rounded-full"
+                  style={{ background: ACCENT_HEX[accentFor(product.handle)] }}
+                />
+                <span className="font-serif text-[0.95rem] italic">
+                  {shortNameFor(product.handle, product.title)}
+                </span>
+                {amount > 0 && (
+                  <span className="font-numeral text-[0.66rem] tabular-nums text-ink/55">
+                    {formatMoney(product.priceRange.minVariantPrice)}
                   </span>
-                  {amount > 0 && (
-                    <span className="font-numeral text-[0.66rem] tabular-nums text-ink/55">
-                      {formatMoney(product.priceRange.minVariantPrice)}
-                    </span>
-                  )}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+                )}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
     </section>
   );
 }
@@ -237,7 +274,7 @@ function PackSpot({ product, index }: { product: Product; index: number }) {
 
   return (
     <li>
-      {/* Zero-width anchor at the pack's centre line: the image overflows it
+      {/* Zero-width anchor on the pack's centre line: the image overflows it
           and is centred with its own transform, so the link itself carries no
           transform (see the stacking-context note above). */}
       <Link
@@ -251,7 +288,7 @@ function PackSpot({ product, index }: { product: Product; index: number }) {
           ["--xw" as string]: `${wide.x}%`,
           ["--bw" as string]: `${100 - wide.b}%`,
           ["--hw" as string]: `${wide.h}%`,
-          ["--tilt" as string]: `${wide.tilt}deg`,
+          ["--tilt" as string]: `${compact.tilt}deg`,
           ["--accent" as string]: ACCENT_HEX[accent],
           ["--accent-ink" as string]: ACCENT_TEXT_HEX[accent],
         }}
@@ -262,31 +299,40 @@ function PackSpot({ product, index }: { product: Product; index: number }) {
           width={image.width}
           height={image.height}
           sizes="(max-width: 1024px) 30vw, 14vw"
-          className={`${packClassName(product.handle)} pack-spot-img animate-settle absolute bottom-0 left-0 h-full w-auto max-w-none origin-bottom -translate-x-1/2 rotate-[var(--tilt)] transition-[translate,rotate,scale,opacity] duration-500 ease-[var(--ease-brand)] group-hover:-translate-y-[6%] group-hover:scale-[1.04] group-hover:rotate-0 group-focus-visible:-translate-y-[6%] group-focus-visible:rotate-0`}
+          className={`${packClassName(product.handle)} pack-spot-img animate-settle absolute bottom-0 left-0 h-full w-auto max-w-none origin-bottom -translate-x-1/2 rotate-[var(--tilt)] transition-[translate,rotate,scale,opacity] duration-500 ease-[var(--ease-brand)] group-hover:-translate-y-[7%] group-hover:scale-[1.04] group-hover:rotate-0 group-focus-visible:-translate-y-[7%] group-focus-visible:rotate-0 lg:rotate-0`}
           style={{ animationDelay: `${delay}ms` }}
         />
 
-        {/* Wide: a name tag above each pack. */}
+        {/* Wide: a name plaque on the marble in front of the podium. Anchored
+            to the pack's base, so it moves with the podium spot. */}
         <span
-          className="animate-rise absolute bottom-[calc(100%+0.55rem)] left-0 z-10 hidden -translate-x-1/2 items-center gap-1.5 rounded-full bg-paper/85 py-1 pr-2.5 pl-2 whitespace-nowrap xl:gap-2 xl:py-1.5 xl:pr-3 xl:pl-2.5 shadow-[0_10px_24px_-16px_color-mix(in_oklab,var(--color-ink)_70%,transparent)] backdrop-blur-sm transition-colors duration-300 group-hover:bg-[var(--accent-ink)] group-hover:text-paper group-focus-visible:bg-[var(--accent-ink)] group-focus-visible:text-paper group-focus-visible:ring-2 group-focus-visible:ring-ink lg:flex"
-          style={{ animationDelay: `${delay + 350}ms` }}
+          className="animate-rise absolute top-[calc(100%+var(--plaque-gap))] left-0 z-10 hidden -translate-x-1/2 flex-col items-center rounded-xl bg-paper/80 px-3 pt-1.5 pb-1.5 whitespace-nowrap shadow-[0_10px_24px_-16px_color-mix(in_oklab,var(--color-ink)_70%,transparent)] backdrop-blur-sm transition-colors duration-300 group-hover:bg-[var(--accent-ink)] group-hover:text-paper group-focus-visible:bg-[var(--accent-ink)] group-focus-visible:text-paper group-focus-visible:ring-2 group-focus-visible:ring-ink lg:flex xl:px-3.5"
+          style={{
+            animationDelay: `${delay + 350}ms`,
+            // Clears the podium's front face, which varies slightly by podium.
+            ["--plaque-gap" as string]: "1.6vw",
+          }}
           aria-hidden="true"
         >
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inset-0 animate-ping rounded-full bg-[var(--accent)] opacity-60" />
-            <span className="relative h-2 w-2 rounded-full bg-[var(--accent)] ring-1 ring-paper/70" />
+          <span className="flex items-center gap-1.5">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inset-0 animate-ping rounded-full bg-[var(--accent)] opacity-60" />
+              <span className="relative h-1.5 w-1.5 rounded-full bg-[var(--accent)] ring-1 ring-paper/70" />
+            </span>
+            <span className="font-serif text-[clamp(0.82rem,1vw,1.05rem)] leading-tight italic">
+              {name}
+            </span>
           </span>
-          <span className="font-serif text-[clamp(0.8rem,1vw,1rem)] italic">{name}</span>
-          {/* Price and arrow open out on hover. */}
-          <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-500 ease-[var(--ease-brand)] group-hover:grid-cols-[1fr] group-focus-visible:grid-cols-[1fr]">
-            <span className="flex items-center gap-1.5 overflow-hidden font-numeral text-[0.62rem] tabular-nums">
-              <span className="pl-1">{price ?? "View"}</span>
-              <span>&rarr;</span>
+          <span className="mt-0.5 flex items-center gap-1 font-numeral text-[0.58rem] tracking-[0.08em] tabular-nums opacity-70 group-hover:opacity-100">
+            {price ?? "View"}
+            {/* The arrow opens out on hover. */}
+            <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-500 ease-[var(--ease-brand)] group-hover:grid-cols-[1fr] group-focus-visible:grid-cols-[1fr]">
+              <span className="overflow-hidden">&nbsp;&rarr;</span>
             </span>
           </span>
         </span>
 
-        {/* Compact: a pulsing marker in place of the tag. */}
+        {/* Compact: a pulsing marker in place of the plaque. */}
         <span
           aria-hidden="true"
           className="absolute bottom-[calc(100%+0.35rem)] left-0 flex h-3 w-3 -translate-x-1/2 lg:hidden"

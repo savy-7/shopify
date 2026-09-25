@@ -167,14 +167,14 @@
     }
   }
 
-  /* The "pick a pack" arrow leans toward the table. */
-  @keyframes nudge {
+  /* The "tap a pack" arrow dips toward the packs. */
+  @keyframes bob {
     0%,
     100% {
       transform: translate3d(0, 0, 0);
     }
     50% {
-      transform: translate3d(5px, 0, 0);
+      transform: translate3d(0, 5px, 0);
     }
   }
 
