@@ -17,8 +17,17 @@ export default function RotatingSeal({
   // A trailing separator keeps the loop from butting the first word against the last.
   const ring = `${text} • `.toUpperCase();
 
+  // `relative` only when the caller hasn't positioned it: both classes at once
+  // resolve by stylesheet order, not by which was written last, and an
+  // absolute seal silently fell back into the document flow.
+  const positioned = /\b(absolute|fixed|sticky)\b/.test(className);
+
   return (
-    <div className={`relative ${className}`} style={style} aria-hidden="true">
+    <div
+      className={`${positioned ? "" : "relative "}${className}`}
+      style={style}
+      aria-hidden="true"
+    >
       <svg viewBox="0 0 100 100" className="animate-seal h-full w-full">
         <defs>
           <path

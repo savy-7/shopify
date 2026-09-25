@@ -4,12 +4,13 @@ import {
   ACCENT_HEX,
   ACCENT_TEXT_HEX,
   accentFor,
+  botanicalFor,
   packClassName,
   shortNameFor,
 } from "@/lib/brand/palette";
-import HeroSpecimen, { type Specimen } from "./HeroSpecimen";
+import SpecimenPlate, { type Specimen } from "./SpecimenPlate";
 
-export default function Hero({ products }: { products: Product[] }) {
+export default function Specimens({ products }: { products: Product[] }) {
   const specimens: Specimen[] = products.map((product) => {
     const amount = Number(product.priceRange.minVariantPrice.amount);
     const accent = accentFor(product.handle);
@@ -18,12 +19,13 @@ export default function Hero({ products }: { products: Product[] }) {
       handle: product.handle,
       title: product.title,
       shortName: shortNameFor(product.handle, product.title),
+      botanical: botanicalFor(product.handle),
       accent: ACCENT_HEX[accent],
       accentInk: ACCENT_TEXT_HEX[accent],
       available: product.availableForSale,
       packClass: packClassName(product.handle),
-      // Four SKUs are still priced at 0 in Shopify. Showing "₹0" would be worse
-      // than showing nothing, so the badge falls back until they're set.
+      // Unpriced SKUs read as ₹0 in Shopify. Showing that would be worse than
+      // showing nothing, so the caption falls back until a price is set.
       price: amount > 0 ? formatMoney(product.priceRange.minVariantPrice) : null,
       image: product.featuredImage
         ? {
@@ -38,5 +40,5 @@ export default function Hero({ products }: { products: Product[] }) {
 
   if (specimens.length === 0) return null;
 
-  return <HeroSpecimen specimens={specimens} />;
+  return <SpecimenPlate specimens={specimens} />;
 }

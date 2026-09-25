@@ -14,7 +14,7 @@ export default function Range({ products }: { products: Product[] }) {
           </p>
           <Botanical name="sprig-pair" className="mt-4 h-[12px] w-[120px] text-ink/25" />
           <h2 className="mt-5 text-[2.4rem] leading-[0.95] font-semibold tracking-[-0.012em] sm:text-5xl">
-            Six packs. One standard.
+            Every pack. One standard.
           </h2>
         </div>
 

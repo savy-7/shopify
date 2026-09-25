@@ -23,9 +23,11 @@
   --color-olive: #7a8450;
   --color-olive-deep: #5c6539;
 
-  --font-display: var(--font-display);
+  /* --font-display and --font-body are set by next/font on <html> (see
+     layout.tsx) and must not be redeclared here: `--x: var(--x)` is a cycle,
+     which makes the variable empty and silently drops every heading and
+     paragraph to the system font. Only aliases with new names belong here. */
   --font-serif: var(--font-display);
-  --font-body: var(--font-body);
   --font-numeral: var(--font-mono);
 }
 

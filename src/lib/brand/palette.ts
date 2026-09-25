@@ -6,7 +6,14 @@
  * products are tagged (e.g. `family:almond`), this can read from the API
  * instead and the hardcoded table goes away.
  */
-export type Accent = "almond" | "mix" | "cashew" | "raisin" | "date" | "pistachio";
+export type Accent =
+  | "almond"
+  | "mix"
+  | "cashew"
+  | "raisin"
+  | "date"
+  | "pistachio"
+  | "walnut";
 
 export const DEFAULT_ACCENT: Accent = "pistachio";
 
@@ -21,6 +28,7 @@ export const ACCENT_HEX: Record<Accent, string> = {
   raisin: "#68334b",
   date: "#1b2436",
   pistachio: "#738b1d",
+  walnut: "#7a0a19",
 };
 
 /**
@@ -37,17 +45,23 @@ export const ACCENT_TEXT_HEX: Record<Accent, string> = {
 
 type BrandProduct = {
   accent: Accent;
-  /** Set enormous in the hero, so it has to be one short word. */
+  /** Set enormous in the specimen plate, so it has to be one short word. */
   shortName: string;
+  /**
+   * Species name for the plate caption. The mix is a blend of several, so it
+   * gets a plain description rather than an invented binomial.
+   */
+  botanical: string;
 };
 
 const BRAND: Record<string, BrandProduct> = {
-  "premium-almonds": { accent: "almond", shortName: "Almonds" },
-  "roasted-salted-pistachios": { accent: "pistachio", shortName: "Pistachios" },
-  "premium-cashews": { accent: "cashew", shortName: "Cashews" },
-  "nuts-seeds-mix": { accent: "mix", shortName: "Mix" },
-  "premium-raisins": { accent: "raisin", shortName: "Raisins" },
-  "premium-arabian-dates": { accent: "date", shortName: "Dates" },
+  "premium-almonds": { accent: "almond", shortName: "Almonds", botanical: "Prunus dulcis" },
+  "roasted-salted-pistachios": { accent: "pistachio", shortName: "Pistachios", botanical: "Pistacia vera" },
+  "premium-cashews": { accent: "cashew", shortName: "Cashews", botanical: "Anacardium occidentale" },
+  "nuts-seeds-mix": { accent: "mix", shortName: "Mix", botanical: "Nuts & seeds, blended" },
+  "premium-raisins": { accent: "raisin", shortName: "Raisins", botanical: "Vitis vinifera" },
+  "premium-arabian-dates": { accent: "date", shortName: "Dates", botanical: "Phoenix dactylifera" },
+  "premium-walnuts": { accent: "walnut", shortName: "Walnuts", botanical: "Juglans regia" },
 };
 
 /** Display order for the hero rotator, sequenced so adjacent accents contrast. */
@@ -61,6 +75,10 @@ export function shortNameFor(handle: string, fallback: string): string {
   return BRAND[handle]?.shortName ?? fallback;
 }
 
+export function botanicalFor(handle: string): string | null {
+  return BRAND[handle]?.botanical ?? null;
+}
+
 /**
  * `cashew` is a pale sand, so it alone needs ink type on top; the rest are dark
  * enough to take paper. Used wherever an accent becomes a filled surface.
@@ -71,7 +89,7 @@ export function isPaleAccent(accent: Accent): boolean {
 
 /**
  * Pack shots are composited with `mix-blend-mode: multiply`, which assumes a
- * pure-white backdrop. Five of the six sit on #FEFEFE and disappear cleanly.
+ * pure-white backdrop. All but one sit on #FEFEFE and disappear cleanly.
  * The Nuts & Seeds Mix shot was taken on cream (#FBF8F0) and leaves a visible
  * warm rectangle, so it gets a brightness lift that pushes its backdrop to
  * white. Measured: 1.045 clears the box with no visible change to the artwork.

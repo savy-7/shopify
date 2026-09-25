@@ -1,7 +1,7 @@
 /**
- * Brand copy, quoted verbatim from the live storefront and the Shopify
- * "About Us" / "Contact" pages. Nothing here is invented — if a claim is not
- * in this file, it is not on the site.
+ * Brand copy, quoted verbatim from the live storefront, the Shopify
+ * "About Us" / "Contact" pages, or supplied directly by the brand. Nothing
+ * here is invented — if a claim is not in this file, it is not on the site.
  *
  * Source of truth is still Shopify; this exists because the current theme holds
  * this copy in section settings the Storefront API does not expose.
@@ -37,12 +37,76 @@ export const PILLARS = [
   },
 ] as const;
 
-export const FOUNDER_MESSAGE = [
-  "Goodness Crafted began with a quiet desire for something simple yet meaningful — food that feels pure, trustworthy, and close to its natural truth.",
-  "We started by choosing the finest nuts and seeds for ourselves, valuing their freshness and integrity. As we shared them with the people around us, we realised how something so natural could bring such genuine comfort. That moment of connection became the heart of our brand.",
-  "Every pack of Goodness Crafted carries that intention — thoughtfully selected, minimally touched, and offered with sincerity. Our hope is that it brings you the same sense of calm and honest goodness it brought to us.",
-  "From us to you, thank you for welcoming Goodness Crafted into your day.",
+/** Homepage "From us to you". */
+export const STORY = {
+  heading: "It started with a simple idea.",
+  body: [
+    "Goodness Crafted began with a quiet belief — that good ingredients, thoughtfully chosen, don't need much to shine.",
+    "What started as an idea slowly became a journey of choosing the right products, getting the little details right and creating something we could truly call our own.",
+    "We're only at the beginning, but every pack carries a little piece of that journey.",
+  ],
+} as const;
+
+/** "Why shop Goodness Crafted?" — reassurance at the point of purchase. */
+export const TRUST = [
+  {
+    title: "Carefully Selected",
+    body: "Quality-focused sourcing across our range.",
+  },
+  {
+    title: "Thoughtfully Packed",
+    body: "Packed with care to preserve quality.",
+  },
+  {
+    title: "100% Vegetarian",
+    body: "Made for vegetarian households.",
+  },
+  {
+    title: "Secure Payments",
+    body: "Safe and convenient checkout.",
+  },
 ] as const;
+
+/** About page, in page order. */
+export const ABOUT = {
+  intro: {
+    heading: "Goodness, thoughtfully crafted.",
+    body: [
+      "Goodness Crafted was created with a simple idea — to make everyday nuts and dry fruits feel a little more thoughtful.",
+      "Carefully chosen products, considered details and a whole lot of care go into everything we create.",
+    ],
+  },
+  founder: {
+    name: "Chhavi",
+    role: "Founder, Goodness Crafted",
+    quote:
+      "Goodness Crafted started with a simple idea — to create something of my own that felt thoughtful, beautiful and genuinely good.",
+    body: [
+      "What began as an idea slowly became a journey of choosing the right products, getting the little details right and building a brand I could truly call my own.",
+      "I wanted Goodness Crafted to be about more than just nuts and dry fruits. I wanted every product to feel carefully chosen, thoughtfully presented and made to be enjoyed.",
+      "We're only at the beginning, but every pack carries a little piece of that journey.",
+      "Thank you for being here.",
+    ],
+  },
+  journey: {
+    heading: "From an idea to something of our own.",
+    body: [
+      "What started as an idea slowly became Goodness Crafted — shaped by countless little decisions, from the products we choose to the details you see in every pack.",
+      "We're still at the beginning, and there's plenty more to come.",
+    ],
+  },
+  beginning: {
+    heading: "We're only at the beginning.",
+    line: "And we're excited to have you with us.",
+  },
+} as const;
+
+/**
+ * The founder's portrait, served from /public. Null until the photograph is
+ * supplied; the About page holds its space either way, so dropping a file in
+ * and setting this path is the whole change.
+ */
+export const FOUNDER_PHOTO: { src: string; alt: string } | null = null;
 
 export const PHILOSOPHY = [
   {

@@ -1,8 +1,10 @@
 import IntroCurtain from "@/components/home/IntroCurtain";
 import Opening from "@/components/home/Opening";
+import Specimens from "@/components/home/Specimens";
 import Intention from "@/components/home/Intention";
 import Story from "@/components/home/Story";
 import Range from "@/components/home/Range";
+import Trust from "@/components/home/Trust";
 import Gifting from "@/components/home/Gifting";
 import Closing from "@/components/home/Closing";
 import Ticker from "@/components/ui/Ticker";
@@ -21,9 +23,11 @@ export default async function Home() {
       <IntroCurtain />
       <Opening products={products} />
       <Ticker items={tickerItems} />
+      <Specimens products={products} />
       <Intention />
       <Story />
       <Range products={products} />
+      <Trust />
       <Gifting />
       <Closing />
     </>

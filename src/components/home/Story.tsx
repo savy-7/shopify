@@ -1,12 +1,12 @@
-import Link from "next/link";
 import Reveal from "@/components/ui/Reveal";
 import Botanical from "@/components/ui/Botanical";
-import { FOUNDER_MESSAGE, PROMISE } from "@/lib/brand/content";
+import { PHILOSOPHY, STORY } from "@/lib/brand/content";
 
 /**
- * The one dark beat in the page. Deliberately carries no pack shot: the product
- * images have an opaque near-white backdrop that only drops out over light
- * surfaces, so a pack here would arrive in a white box.
+ * The one dark beat in the page: the brand's story, then its philosophy.
+ * Deliberately carries no pack shot: the product images have an opaque
+ * near-white backdrop that only drops out over light surfaces, so a pack here
+ * would arrive in a white box.
  */
 export default function Story() {
   return (
@@ -22,32 +22,41 @@ export default function Story() {
             <p className="font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-paper/45">
               From us to you
             </p>
-            <blockquote className="mt-7 text-[2rem] leading-[1.05] font-semibold tracking-[-0.005em] sm:text-[2.6rem]">
-              <span className="font-serif font-normal italic text-olive">
-                {PROMISE}
-              </span>
-            </blockquote>
+            <h2 className="mt-7 text-[2.2rem] leading-[1.02] font-normal tracking-[-0.01em] sm:text-[3rem]">
+              <span className="font-serif italic text-olive">{STORY.heading}</span>
+            </h2>
             <Botanical name="sprig-pair" className="mt-9 h-[13px] w-[130px] text-olive" />
           </Reveal>
 
-          <div className="space-y-6">
-            {FOUNDER_MESSAGE.map((paragraph, i) => (
+          <div className="space-y-6 lg:pt-14">
+            {STORY.body.map((paragraph, i) => (
               <Reveal key={i} delay={i * 110}>
                 <p className="max-w-2xl leading-relaxed text-paper/75 lg:text-lg">
                   {paragraph}
                 </p>
               </Reveal>
             ))}
-
-            <Reveal delay={FOUNDER_MESSAGE.length * 110}>
-              <Link
-                href="/about"
-                className="mt-4 inline-block font-numeral text-[0.68rem] uppercase tracking-[0.2em] text-paper underline decoration-paper/30 underline-offset-[7px] transition-colors hover:decoration-olive"
-              >
-                Read our philosophy
-              </Link>
-            </Reveal>
           </div>
+        </div>
+
+        <div className="mt-24 border-t border-paper/15 pt-14 lg:mt-32">
+          <Reveal>
+            <p className="font-numeral text-[0.66rem] uppercase tracking-[0.28em] text-paper/45">
+              Our philosophy
+            </p>
+          </Reveal>
+
+          <ol className="mt-12 grid gap-12 sm:grid-cols-3 sm:gap-8">
+            {PHILOSOPHY.map((item, i) => (
+              <Reveal as="li" key={item.title} delay={i * 130}>
+                <p className="font-numeral text-[0.66rem] tracking-[0.2em] text-olive">
+                  {String(i + 1).padStart(2, "0")}
+                </p>
+                <h3 className="mt-5 text-2xl font-semibold tracking-[-0.008em]">{item.title}</h3>
+                <p className="mt-4 max-w-xs leading-relaxed text-paper/65">{item.body}</p>
+              </Reveal>
+            ))}
+          </ol>
         </div>
       </div>
     </section>

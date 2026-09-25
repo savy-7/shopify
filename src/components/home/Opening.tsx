@@ -117,8 +117,11 @@ export default function Opening({ products }: { products: Product[] }) {
               />
             </div>
 
+            {/* Centred on the seam between the two halves of the opening:
+                the photograph's top edge when stacked, its left edge beside
+                the text. The paper disc keeps the ring legible over the photo. */}
             <RotatingSeal
-              className="animate-rise absolute bottom-5 -left-6 hidden h-24 w-24 sm:block lg:-left-10 lg:h-28 lg:w-28"
+              className="animate-rise absolute top-0 left-1/2 z-20 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-paper shadow-[0_18px_40px_-24px_color-mix(in_oklab,var(--color-ink)_60%,transparent)] lg:top-1/2 lg:left-0 lg:h-32 lg:w-32 xl:h-36 xl:w-36"
               style={{ animationDelay: "1500ms" }}
             />
           </div>
@@ -128,7 +131,7 @@ export default function Opening({ products }: { products: Product[] }) {
       {/* The shelf. Packs are cropped by the section edge so the row reads as
           continuing past the fold, which is also the scroll invitation. */}
       <div className="relative mt-12 h-[clamp(105px,13vw,180px)]">
-        {/* Six packs do not fit a phone at a readable size. Rather than shrink
+        {/* The full range does not fit a phone at a readable size. Rather than shrink
             them to thumbnails or clip the outer two out of reach, the row
             scrolls below sm and centres once there is room. */}
         <ul className="scrollbar-none absolute inset-x-0 bottom-0 flex snap-x items-end gap-[1.5vw] overflow-x-auto px-4 sm:justify-center sm:overflow-visible">

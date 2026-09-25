@@ -9,6 +9,7 @@ export type NutIconName =
   | "pistachio"
   | "raisin"
   | "date"
+  | "walnut"
   | "seed"
   | "leaf"
   | "sprig";
@@ -43,6 +44,14 @@ const PATHS: Record<NutIconName, React.ReactNode> = {
       <path d="M10.2 2.2c.7.6 1.2 1 1.8 1.4" />
     </>
   ),
+  walnut: (
+    <>
+      <path d="M12 3c4.6 0 7.8 3.7 7.8 8.6 0 5-3.4 9.4-7.8 9.4S4.2 16.6 4.2 11.6C4.2 6.7 7.4 3 12 3Z" />
+      <path d="M12 3v18" />
+      <path d="M8.6 7.8c1.5.7 1.5 2.3 0 3 1.5.7 1.5 2.3 0 3s1.5 2.3 0 3" />
+      <path d="M15.4 7.8c-1.5.7-1.5 2.3 0 3-1.5.7-1.5 2.3 0 3s-1.5 2.3 0 3" />
+    </>
+  ),
   seed: (
     <>
       <path d="M12 2.6c3.7 3 5.6 6.6 5.6 10.2 0 4.7-2.4 8.6-5.6 8.6s-5.6-3.9-5.6-8.6c0-3.6 1.9-7.2 5.6-10.2Z" />
@@ -72,6 +81,7 @@ export const ICON_BY_HANDLE: Record<string, NutIconName> = {
   "nuts-seeds-mix": "seed",
   "premium-raisins": "raisin",
   "premium-arabian-dates": "date",
+  "premium-walnuts": "walnut",
 };
 
 export function iconForHandle(handle: string): NutIconName {
