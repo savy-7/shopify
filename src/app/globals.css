@@ -151,6 +151,33 @@
     }
   }
 
+  /* Packs are set down on the table: a short drop that lands without bounce. */
+  /* `backwards`, not `both`: a held end state would pin opacity at 1 and
+     override the hover dimming below. */
+  --animate-settle: settle 0.9s var(--ease-brand) backwards;
+
+  @keyframes settle {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -34px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  /* The "pick a pack" arrow leans toward the table. */
+  @keyframes nudge {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(5px, 0, 0);
+    }
+  }
+
   /* The hero image wipes up behind its arch. */
   @keyframes unveil {
     from {
@@ -188,6 +215,13 @@ h3 {
    See NON_WHITE_BACKDROP in src/lib/brand/palette.ts. */
 @utility pack-normalize {
   filter: brightness(1.045);
+}
+
+/* Opening scene: while one pack is hovered the rest step back. Opacity goes on
+   the image itself — on the link it would isolate the multiply blend and
+   bring back the white box. See Opening.tsx. */
+.pack-scene:has(.pack-spot:hover) .pack-spot:not(:hover) .pack-spot-img {
+  opacity: 0.45;
 }
 
 /* Paper tooth. Keeps large flat areas from reading as dead screen-white. */
