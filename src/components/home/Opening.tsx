@@ -9,6 +9,7 @@ import {
   shortNameFor,
 } from "@/lib/brand/palette";
 import { formatMoney } from "@/lib/format";
+import AvailableOn from "@/components/ui/AvailableOn";
 
 /**
  * Page opening: the range set into a photograph, every pack a link.
@@ -309,6 +310,17 @@ export default function Opening({ products }: { products: Product[] }) {
           );
         })}
       </ul>
+
+      {/* Closes the hero at every width, rather than only the mobile/tablet
+          chips above it — desktop's plaques give per-pack price and status,
+          but not this: that the range is bought elsewhere too. */}
+      <div className="relative z-20 border-t border-ink/10 bg-paper/60 px-5 py-4 backdrop-blur-sm sm:px-8">
+        <AvailableOn
+          size="sm"
+          align="center"
+          className="mx-auto max-w-[110rem]"
+        />
+      </div>
     </section>
   );
 }
