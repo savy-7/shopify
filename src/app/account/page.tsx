@@ -72,22 +72,56 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
           <p className="mt-4 text-ink/50">No orders yet.</p>
         ) : (
           <ul className="mt-6 divide-y divide-ink/10">
-            {orders.map((order) => (
-              <li key={order.id} className="flex items-center justify-between py-4">
-                <div>
-                  <p className="font-medium">{order.name}</p>
-                  <p className="mt-0.5 text-sm text-ink/50">
-                    {new Date(order.processedAt).toLocaleDateString("en-IN", {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                    {order.fulfillmentStatus ? ` · ${order.fulfillmentStatus.toLowerCase()}` : ""}
-                  </p>
-                </div>
-                <p className="font-numeral tabular-nums">{formatMoney(order.totalPrice)}</p>
-              </li>
-            ))}
+            {orders.map((order) => {
+              // Usually one fulfillment per order; more if Shopify ships it
+              // in separate packages. Only entries with a tracking number
+              // in Shopify admin carry a url — see the doc comment on
+              // getCustomerAccount for how that gets set.
+              const tracking = order.fulfillments.edges
+                .map((edge) => edge.node.trackingInformation)
+                .flat()
+                .filter((t): t is { company: string | null; number: string | null; url: string } =>
+                  Boolean(t.url)
+                );
+
+              return (
+                <li key={order.id} className="py-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="font-medium">{order.name}</p>
+                      <p className="mt-0.5 text-sm text-ink/50">
+                        {new Date(order.processedAt).toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                        {order.fulfillmentStatus ? ` · ${order.fulfillmentStatus.toLowerCase()}` : ""}
+                      </p>
+                    </div>
+                    <p className="shrink-0 font-numeral tabular-nums">
+                      {formatMoney(order.totalPrice)}
+                    </p>
+                  </div>
+
+                  {tracking.length > 0 && (
+                    <div className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1.5">
+                      {tracking.map((t, i) => (
+                        <a
+                          key={i}
+                          href={t.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-numeral text-[0.68rem] uppercase tracking-[0.15em] text-ink/60 underline decoration-ink/20 underline-offset-4 transition-colors hover:text-ink"
+                        >
+                          Track order{t.company ? ` · ${t.company}` : ""}
+                          {tracking.length > 1 && t.number ? ` (${t.number})` : ""}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         )}
       </Reveal>

@@ -47,12 +47,35 @@ const CUSTOMER_QUERY = `#graphql
                 }
               }
             }
+            fulfillments(first: 5) {
+              edges {
+                node {
+                  status
+                  latestShipmentStatus
+                  estimatedDeliveryAt
+                  trackingInformation {
+                    company
+                    number
+                    url
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
   }
 `;
+
+export type Fulfillment = {
+  status: string | null;
+  latestShipmentStatus: string | null;
+  estimatedDeliveryAt: string | null;
+  /** Only carries a value once tracking is attached in Shopify admin — see
+   *  getCustomerAccount's doc comment for how a merchant sets that up. */
+  trackingInformation: { company: string | null; number: string | null; url: string | null }[];
+};
 
 export type CustomerOrder = {
   id: string;
@@ -62,6 +85,7 @@ export type CustomerOrder = {
   fulfillmentStatus: string | null;
   totalPrice: Money;
   lineItems: { edges: { node: { title: string; quantity: number } }[] };
+  fulfillments: { edges: { node: Fulfillment }[] };
 };
 
 export type CustomerAccount = {
