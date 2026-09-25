@@ -13,10 +13,14 @@ export const PRODUCTS_TAG = "shopify-products";
 /**
  * Backstop only. Webhook invalidation is what makes edits appear promptly;
  * this is how long stale data can survive if a webhook is never configured or
- * silently fails. Five minutes keeps the common case fast without letting a
- * price sit wrong for an hour.
+ * silently fails. Stock is the case that matters: a restock is a separate
+ * Shopify event (inventory_levels/update) from a product edit, so it is the
+ * one most likely to be missing a webhook. At 300s a restock took up to ~10
+ * minutes to appear (page window plus data window, stale-while-revalidate);
+ * 60s keeps that to a couple of minutes. The cost is one Storefront API call
+ * per product query per minute, and only while pages are being visited.
  */
-const DEFAULT_REVALIDATE = 300;
+const DEFAULT_REVALIDATE = 60;
 
 type ShopifyFetchArgs<TVariables> = {
   query: string;

@@ -148,7 +148,9 @@ function FounderPortrait() {
             alt={FOUNDER_PHOTO.alt}
             fill
             sizes="(max-width: 1024px) 90vw, 28rem"
-            className="object-cover"
+            // The portrait is 2:3 in a 4:5 slot; the crop comes off the
+            // bottom so the face keeps its headroom.
+            className="object-cover object-[50%_12%]"
           />
         ) : (
           <Botanical

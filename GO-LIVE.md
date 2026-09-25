@@ -105,14 +105,41 @@ the real deployment while you work through the rest.
 1. Shopify admin → **Settings → Customer accounts** → turn accounts on.
 2. **Sales channels → Headless** → your storefront → **Customer Account API
    settings**.
-3. Under **Application setup**, add:
-   - **Callback URL:** `{your Vercel/domain URL}/api/auth/callback`
-   - **Logout URL:** `{your Vercel/domain URL}`
+3. Under **Application setup**, enter these **exactly** — Shopify compares
+   them character for character, and a mismatch shows "redirect_uri
+   mismatch" on the sign-in page. The site sends the apex form (it's built
+   from `NEXT_PUBLIC_SITE_URL=https://goodnesscrafted.com`), but visitors
+   browse on `www`, so register both:
+   - **Callback URLs:**
+     `https://goodnesscrafted.com/api/auth/callback` and
+     `https://www.goodnesscrafted.com/api/auth/callback`
+   - **JavaScript origins:** `https://goodnesscrafted.com` and
+     `https://www.goodnesscrafted.com`
+   - **Logout URL:** `https://goodnesscrafted.com`
+   No trailing slash on any of them, and `https` only.
 4. Copy the **Client ID** and the **Authorization**, **Token**, and **Logout**
-   endpoint URLs shown there — verbatim, don't retype them.
-5. Add all five as Vercel environment variables (see `.env.local.example` for
+   endpoint URLs shown there — verbatim, don't retype them. If the client
+   type is **Confidential**, also copy the **client secret** into
+   `SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_SECRET`; for **Public**, leave that unset.
+5. Add them as Vercel environment variables (see `.env.local.example` for
    the exact names) and redeploy.
 6. Test signing in at `/account`.
+
+### 0.5 The old theme on es959e-0b.myshopify.com
+
+Checkout runs on the myshopify domain (step 0.3.3 made it Shopify's primary
+domain), so that domain must stay live. **Don't password-protect the online
+store** — for headless stores that sends buyers to the password page instead
+of checkout.
+
+Instead, paste [`shopify-admin/theme-redirect.liquid`](shopify-admin/theme-redirect.liquid)
+into the live theme's `layout/theme.liquid`, directly after `<head>`. Every
+page the theme renders then forwards to the same page on goodnesscrafted.com
+(products map 1:1) and is marked noindex; cart, checkout, policy and account
+pages are left alone. This also fixes checkout's "Continue shopping" link,
+which points at the myshopify storefront. Test after saving: visit
+`es959e-0b.myshopify.com` (should land on the new site), then complete a
+checkout from the new site (should be unaffected).
 
 ---
 

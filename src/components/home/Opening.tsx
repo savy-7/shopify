@@ -19,8 +19,8 @@ import { formatMoney } from "@/lib/format";
  *   above and a name plaque on the marble in front of each podium;
  * - tablet (sm–lg): a 16:11 crop of the landscape table banner, packs in a
  *   staggered two-depth row, copy above, names in a row of chips beneath;
- * - phone: the portrait table banner uncropped, copy on its wall, packs in
- *   two rows on the marble, chips beneath.
+ * - phone: the portrait phone banner uncropped, copy on its wall, packs in a
+ *   formal three-over-four of equal size on the marble, chips beneath.
  * Spots are percentages of the scene, so on wide screens they are
  * percentages of the photograph itself and stay on their podiums at any width.
  *
@@ -72,26 +72,33 @@ const WIDE: Spot[] = PODIUMS.map(([x, surface]) => ({
 }));
 
 /**
- * Portrait table banner (phones). Table edge at 51%. Back row stands between
- * the bowls (clear marble spans 30–72% across); front row across the marble,
- * its bases above the blurred foreground leaves (which start at 81% down) —
- * a pack standing in front of a foreground leaf would read as pasted on.
- * The rightmost front pack stands in front of the towel, which reads as depth.
+ * Phone banner (portrait, 940:1672): bare wall over an empty marble top,
+ * table edge at 55%, leaves only in the top corners and bottom-left.
+ *
+ * A formal display: every pack the same size, upright, in a symmetric
+ * three-over-four — back row on quarters, front row on eighths, so each back
+ * pack sits centred over the gap between two front ones. The rows are far
+ * enough apart that no pack crosses another (see the multiply note above),
+ * the front row's bases stay above the blurred leaves (which start at 80%
+ * down), and the back row's tops stay below the copy on the wall.
+ * The mix, whose shot is the widest, lands back-centre.
  */
-const PHONE_FRONT_H = 20;
-const PHONE_BACK_H = 14;
-const PHONE_FRONT_BASE = 83;
+const PHONE_H = 18;
 const PHONE_BACK_BASE = 60;
+const PHONE_FRONT_BASE = 80;
+const phoneSpot = (x: number, base: number): Spot => ({
+  x,
+  b: base + PHONE_H * BASE_OFFSET,
+  h: PHONE_H,
+});
 const PHONE: Spot[] = [
-  { x: 17.5, b: PHONE_FRONT_BASE + PHONE_FRONT_H * BASE_OFFSET, h: PHONE_FRONT_H },
-  { x: 35, b: PHONE_BACK_BASE + PHONE_BACK_H * BASE_OFFSET, h: PHONE_BACK_H },
-  { x: 39.5, b: PHONE_FRONT_BASE + PHONE_FRONT_H * BASE_OFFSET, h: PHONE_FRONT_H },
-  // The mix shot is wider than the rest (5:6), so the back row is spaced
-  // around it.
-  { x: 51, b: PHONE_BACK_BASE + PHONE_BACK_H * BASE_OFFSET, h: PHONE_BACK_H },
-  { x: 61.5, b: PHONE_FRONT_BASE + PHONE_FRONT_H * BASE_OFFSET, h: PHONE_FRONT_H },
-  { x: 67, b: PHONE_BACK_BASE + PHONE_BACK_H * BASE_OFFSET, h: PHONE_BACK_H },
-  { x: 83.5, b: PHONE_FRONT_BASE + PHONE_FRONT_H * BASE_OFFSET, h: PHONE_FRONT_H },
+  phoneSpot(12.5, PHONE_FRONT_BASE),
+  phoneSpot(25, PHONE_BACK_BASE),
+  phoneSpot(37.5, PHONE_FRONT_BASE),
+  phoneSpot(50, PHONE_BACK_BASE),
+  phoneSpot(62.5, PHONE_FRONT_BASE),
+  phoneSpot(75, PHONE_BACK_BASE),
+  phoneSpot(87.5, PHONE_FRONT_BASE),
 ];
 
 // Landscape table banner (tablets), alternating front / back rows. Its table
@@ -113,7 +120,7 @@ const COMPACT: (Spot & { tilt: number })[] = [
 const WALL_WIDE =
   "linear-gradient(90deg, #faf3e4 0%, #f3e5d1 20%, #dcc4a8 40%, #d3b99c 60%, #d8c2a6 80%, #dfccb3 100%)";
 const WALL_COMPACT = "#e9dccb";
-const WALL_PHONE = "#d6ba9a";
+const WALL_PHONE = "#f0dfc8";
 
 const SCENE_ALT = "Nuts and dry fruits in wooden bowls on a sunlit marble table";
 
@@ -143,8 +150,8 @@ export default function Opening({ products }: { products: Product[] }) {
   });
   const { props: phoneImg } = getImageProps({
     alt: SCENE_ALT,
-    src: "/brand/table-portrait.webp",
-    width: 941,
+    src: "/brand/phone-banner.webp",
+    width: 940,
     height: 1672,
     sizes: "100vw",
   });
@@ -226,7 +233,7 @@ export default function Opening({ products }: { products: Product[] }) {
       </div>
 
       {/* The scene. */}
-      <div className="pack-scene relative aspect-[941/1672] sm:-mt-6 sm:aspect-[16/11] lg:mt-[3vw] lg:aspect-[2048/768]">
+      <div className="pack-scene relative aspect-[940/1672] sm:-mt-6 sm:aspect-[16/11] lg:mt-[3vw] lg:aspect-[2048/768]">
         {/* One photograph per layout; each device downloads only its own.
             next/image cannot switch sources by breakpoint, so this is the
             documented art-direction pattern (getImageProps + <picture>). */}
@@ -347,7 +354,7 @@ function PackSpot({ product, index }: { product: Product; index: number }) {
           width={image.width}
           height={image.height}
           sizes="(max-width: 1024px) 30vw, 14vw"
-          className={`${packClassName(product.handle)} pack-spot-img animate-settle absolute bottom-0 left-0 h-full w-auto max-w-none origin-bottom -translate-x-1/2 rotate-[var(--tilt)] transition-[translate,rotate,scale,opacity] duration-500 ease-[var(--ease-brand)] group-hover:-translate-y-[7%] group-hover:scale-[1.04] group-hover:rotate-0 group-focus-visible:-translate-y-[7%] group-focus-visible:rotate-0 lg:rotate-0`}
+          className={`${packClassName(product.handle)} pack-spot-img animate-settle absolute bottom-0 left-0 h-full w-auto max-w-none origin-bottom -translate-x-1/2 sm:rotate-[var(--tilt)] transition-[translate,rotate,scale,opacity] duration-500 ease-[var(--ease-brand)] group-hover:-translate-y-[7%] group-hover:scale-[1.04] group-hover:rotate-0 group-focus-visible:-translate-y-[7%] group-focus-visible:rotate-0 lg:rotate-0`}
           style={{ animationDelay: `${delay}ms` }}
         />
 

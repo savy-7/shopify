@@ -29,9 +29,21 @@ type TokenResponse = {
 };
 
 async function tokenRequest(body: Record<string, string>): Promise<TokenResponse> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/x-www-form-urlencoded",
+  };
+  // Shopify offers "public" and "confidential" client types. Public clients
+  // rely on PKCE alone; confidential ones must also send their id and secret
+  // in the Authorization header. Supporting both means the type chosen in
+  // Shopify admin can't silently break sign-in at the token step.
+  const secret = AUTH_CONFIG.clientSecret;
+  if (secret) {
+    headers.Authorization = `Basic ${Buffer.from(`${AUTH_CONFIG.clientId}:${secret}`).toString("base64")}`;
+  }
+
   const res = await fetch(AUTH_CONFIG.tokenUrl, {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    headers,
     body: new URLSearchParams(body),
   });
 

@@ -106,7 +106,10 @@ export const ABOUT = {
  * supplied; the About page holds its space either way, so dropping a file in
  * and setting this path is the whole change.
  */
-export const FOUNDER_PHOTO: { src: string; alt: string } | null = null;
+export const FOUNDER_PHOTO: { src: string; alt: string } | null = {
+  src: "/brand/founder.webp",
+  alt: "Chhavi, founder of Goodness Crafted, smiling in a garden",
+};
 
 export const PHILOSOPHY = [
   {

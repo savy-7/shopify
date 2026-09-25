@@ -1,0 +1,46 @@
+{%- comment -%}
+  Goodness Crafted — send the old Shopify theme to the real storefront.
+
+  WHERE: Shopify admin → Online Store → Themes → (live theme) → ⋯ → Edit code
+         → layout/theme.liquid → paste this whole block on the line directly
+         after the opening <head> tag → Save.
+
+  WHY: checkout runs on es959e-0b.myshopify.com (Shopify's primary domain),
+  so that domain has to stay live — password-protecting it breaks headless
+  checkout. Instead, every page the theme renders is forwarded to the same
+  page on goodnesscrafted.com, and marked noindex so search engines drop it.
+
+  LEFT ALONE, on purpose: cart, policy pages (linked from checkout),
+  customer-account pages, gift cards, the password page and Shopify's bot
+  check. Checkout itself isn't rendered by the theme, so it's never affected.
+  The theme editor is exempt too, so the theme can still be edited.
+{%- endcomment -%}
+{%- unless request.design_mode -%}
+  {%- assign gc_target = nil -%}
+  {%- case request.page_type -%}
+    {%- when 'index' -%}
+      {%- assign gc_target = '/' -%}
+    {%- when 'product' -%}
+      {%- assign gc_target = '/products/' | append: product.handle -%}
+    {%- when 'collection', 'list-collections', 'search' -%}
+      {%- assign gc_target = '/shop' -%}
+    {%- when 'page' -%}
+      {%- if page.handle contains 'about' -%}
+        {%- assign gc_target = '/about' -%}
+      {%- elsif page.handle contains 'contact' -%}
+        {%- assign gc_target = '/contact' -%}
+      {%- else -%}
+        {%- assign gc_target = '/' -%}
+      {%- endif -%}
+    {%- when 'blog', 'article', 'metaobject', '404' -%}
+      {%- assign gc_target = '/' -%}
+  {%- endcase -%}
+
+  {%- if gc_target -%}
+    {%- assign gc_url = 'https://www.goodnesscrafted.com' | append: gc_target -%}
+    <meta name="robots" content="noindex">
+    <link rel="canonical" href="{{ gc_url }}">
+    <meta http-equiv="refresh" content="0; url={{ gc_url }}">
+    <script>window.location.replace({{ gc_url | json }});</script>
+  {%- endif -%}
+{%- endunless -%}

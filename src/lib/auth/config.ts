@@ -25,6 +25,10 @@ export const AUTH_CONFIG = {
   get clientId() {
     return required("SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID");
   },
+  /** Only for a "confidential" client; unset for a "public" one. */
+  get clientSecret(): string | undefined {
+    return process.env.SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_SECRET || undefined;
+  },
   get authorizeUrl() {
     return required("SHOPIFY_CUSTOMER_ACCOUNT_AUTHORIZE_URL");
   },
