@@ -156,15 +156,8 @@ export const MARKETPLACES: {
   tile?: string;
   url: string | null;
 }[] = [
-  // Blinkit's own logo is a yellow app-icon square; cropped to its wordmark
-  // and set on the same yellow so it stays legible at tile size.
-  {
-    name: "Blinkit",
-    logo: { src: "/brand/marketplaces/blinkit-wordmark.svg", width: 3015, height: 884 },
-    tile: "#F8CB46",
-    url: null,
-  },
   { name: "Amazon", logo: { src: "/brand/marketplaces/amazon.svg", width: 603, height: 182 }, url: null },
-  { name: "Instamart", logo: null, url: null },
-  { name: "Zepto", logo: { src: "/brand/marketplaces/zepto.svg", width: 90, height: 30 }, url: null },
+  // Blinkit, Instamart and Zepto go back in once the range is actually live
+  // on them — assets are still in public/brand/marketplaces/ (Instamart's
+  // isn't, see AvailableOn.tsx's note) for whenever that's confirmed.
 ];
