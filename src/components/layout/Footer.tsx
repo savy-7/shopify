@@ -7,7 +7,11 @@ import InstagramGlyph from "@/components/ui/InstagramGlyph";
 
 async function getShop(): Promise<ShopQueryResult["shop"]> {
   try {
-    const data = await shopifyFetch<ShopQueryResult>({ query: SHOP_QUERY, revalidate: 3600 });
+    // No revalidate override: inherits shopifyFetch's default window (see
+    // DEFAULT_REVALIDATE in client.ts) instead of a separate, longer one.
+    // The 3600s this had was why a merchant writing a policy in Shopify
+    // admin didn't see it linked here for up to an hour afterwards.
+    const data = await shopifyFetch<ShopQueryResult>({ query: SHOP_QUERY });
     return data.shop;
   } catch {
     // Falls back to a shop with no policies rather than no footer at all —
