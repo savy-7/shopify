@@ -13,12 +13,14 @@ import { formatMoney } from "@/lib/format";
 /**
  * Page opening: the range set into a photograph, every pack a link.
  *
- * Two scenes, served with <picture> so each device downloads only its own:
+ * Three scenes, served with <picture> so each device downloads only its own:
  * - wide (lg+): the podium banner at its full 2048:768 ratio, uncropped, one
  *   pack standing on each of its seven podiums, copy centred on the wall
  *   above and a name plaque on the marble in front of each podium;
- * - compact: a taller crop of the table banner, packs in a staggered
- *   two-depth row, copy above, names in a row of chips beneath.
+ * - tablet (sm–lg): a 16:11 crop of the landscape table banner, packs in a
+ *   staggered two-depth row, copy above, names in a row of chips beneath;
+ * - phone: the portrait table banner uncropped, copy on its wall, packs in
+ *   two rows on the marble, chips beneath.
  * Spots are percentages of the scene, so on wide screens they are
  * percentages of the photograph itself and stay on their podiums at any width.
  *
@@ -69,7 +71,31 @@ const WIDE: Spot[] = PODIUMS.map(([x, surface]) => ({
   h: PACK_H,
 }));
 
-// Table banner, alternating front / back rows. Its table edge is at 69%.
+/**
+ * Portrait table banner (phones). Table edge at 51%. Back row stands between
+ * the bowls (clear marble spans 30–72% across); front row across the marble,
+ * its bases above the blurred foreground leaves (which start at 81% down) —
+ * a pack standing in front of a foreground leaf would read as pasted on.
+ * The rightmost front pack stands in front of the towel, which reads as depth.
+ */
+const PHONE_FRONT_H = 20;
+const PHONE_BACK_H = 14;
+const PHONE_FRONT_BASE = 83;
+const PHONE_BACK_BASE = 60;
+const PHONE: Spot[] = [
+  { x: 17.5, b: PHONE_FRONT_BASE + PHONE_FRONT_H * BASE_OFFSET, h: PHONE_FRONT_H },
+  { x: 35, b: PHONE_BACK_BASE + PHONE_BACK_H * BASE_OFFSET, h: PHONE_BACK_H },
+  { x: 39.5, b: PHONE_FRONT_BASE + PHONE_FRONT_H * BASE_OFFSET, h: PHONE_FRONT_H },
+  // The mix shot is wider than the rest (5:6), so the back row is spaced
+  // around it.
+  { x: 51, b: PHONE_BACK_BASE + PHONE_BACK_H * BASE_OFFSET, h: PHONE_BACK_H },
+  { x: 61.5, b: PHONE_FRONT_BASE + PHONE_FRONT_H * BASE_OFFSET, h: PHONE_FRONT_H },
+  { x: 67, b: PHONE_BACK_BASE + PHONE_BACK_H * BASE_OFFSET, h: PHONE_BACK_H },
+  { x: 83.5, b: PHONE_FRONT_BASE + PHONE_FRONT_H * BASE_OFFSET, h: PHONE_FRONT_H },
+];
+
+// Landscape table banner (tablets), alternating front / back rows. Its table
+// edge is at 69%.
 const COMPACT: (Spot & { tilt: number })[] = [
   { x: 14, b: 96, h: 28, tilt: -3 },
   { x: 26, b: 72, h: 23, tilt: 2 },
@@ -87,6 +113,7 @@ const COMPACT: (Spot & { tilt: number })[] = [
 const WALL_WIDE =
   "linear-gradient(90deg, #faf3e4 0%, #f3e5d1 20%, #dcc4a8 40%, #d3b99c 60%, #d8c2a6 80%, #dfccb3 100%)";
 const WALL_COMPACT = "#e9dccb";
+const WALL_PHONE = "#d6ba9a";
 
 const SCENE_ALT = "Nuts and dry fruits in wooden bowls on a sunlit marble table";
 
@@ -104,18 +131,29 @@ export default function Opening({ products }: { products: Product[] }) {
     height: 768,
     sizes: "100vw",
   });
-  const { props: compactImg } = getImageProps({
+  const {
+    props: { srcSet: tabletSrcSet },
+  } = getImageProps({
     alt: SCENE_ALT,
     src: "/brand/table-banner.webp",
     width: 2048,
     height: 768,
-    sizes: "(max-width: 640px) 220vw, 200vw",
+    // A 16:11 crop of a 2048:768 photo, covered by height: ~1.83x the width.
+    sizes: "200vw",
+  });
+  const { props: phoneImg } = getImageProps({
+    alt: SCENE_ALT,
+    src: "/brand/table-portrait.webp",
+    width: 941,
+    height: 1672,
+    sizes: "100vw",
   });
 
   return (
     <section
-      className="relative overflow-hidden bg-[var(--wall-compact)] lg:bg-[image:var(--wall-wide)]"
+      className="relative overflow-hidden bg-[var(--wall-phone)] sm:bg-[var(--wall-compact)] lg:bg-[image:var(--wall-wide)]"
       style={{
+        ["--wall-phone" as string]: WALL_PHONE,
         ["--wall-compact" as string]: WALL_COMPACT,
         ["--wall-wide" as string]: WALL_WIDE,
       }}
@@ -125,28 +163,28 @@ export default function Opening({ products }: { products: Product[] }) {
         className="grain-layer pointer-events-none absolute inset-0 z-30 opacity-[0.3]"
       />
 
-      {/* Copy. In flow above the scene when compact; centred on the wall above
-          the podiums when wide. */}
-      <div className="relative z-20 px-5 pt-10 sm:px-8 lg:absolute lg:inset-x-0 lg:top-0 lg:pt-[2.2vw] lg:text-center">
-        {/* A soft pool of wall-coloured light behind the copy. The olive
-            branches reach in from the right at headline height, and the
-            outlined "crafted." is unreadable over leaves without it. */}
+      {/* Copy. Phones: centred on the wall of the portrait photo. Tablets: in
+          flow above the scene. Wide: centred on the wall above the podiums. */}
+      <div className="absolute inset-x-0 top-0 z-20 px-5 pt-6 text-center sm:relative sm:inset-auto sm:px-8 sm:pt-10 sm:text-left lg:absolute lg:inset-x-0 lg:top-0 lg:pt-[2.2vw] lg:text-center">
+        {/* A soft pool of wall-coloured light behind the copy. Branches reach
+            in at headline height and leaf shadows cross the wall, and the
+            outlined "crafted." is unreadable over them without it. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute top-0 left-1/2 -z-10 hidden h-[17vw] w-[66vw] -translate-x-1/2 lg:block"
+          className="pointer-events-none absolute top-0 left-1/2 -z-10 h-[80vw] w-[120vw] -translate-x-1/2 sm:hidden lg:block lg:h-[17vw] lg:w-[66vw]"
           style={{
             background:
               "radial-gradient(closest-side, rgb(248 241 229 / 0.88), rgb(248 241 229 / 0.6) 55%, transparent)",
           }}
         />
         <p
-          className="animate-rise font-numeral text-[0.62rem] uppercase tracking-[0.42em] text-ink/45"
+          className="animate-rise font-numeral text-[0.58rem] uppercase tracking-[0.26em] text-ink/55 sm:text-[0.62rem] sm:tracking-[0.42em] sm:text-ink/45"
           style={{ animationDelay: "780ms" }}
         >
           Crafting goodness in every bite
         </p>
 
-        <h1 className="mt-5 text-[clamp(2.7rem,11vw,4.2rem)] leading-[0.98] font-normal tracking-[-0.015em] lg:mt-[0.9vw] lg:text-[3.3vw] lg:leading-[1.05]">
+        <h1 className="mt-4 text-[clamp(2.5rem,11vw,4.2rem)] sm:mt-5 leading-[0.98] font-normal tracking-[-0.015em] lg:mt-[0.9vw] lg:text-[3.3vw] lg:leading-[1.05]">
           <span className="animate-rise block lg:inline" style={{ animationDelay: "880ms" }}>
             Goodness,{" "}
           </span>
@@ -169,7 +207,7 @@ export default function Opening({ products }: { products: Product[] }) {
         </h1>
 
         <div
-          className="animate-rise mt-8 flex flex-wrap items-center gap-7 lg:mt-[1.3vw] lg:justify-center"
+          className="animate-rise mt-6 flex flex-wrap items-center justify-center gap-7 sm:mt-8 sm:justify-start lg:mt-[1.3vw] lg:justify-center"
           style={{ animationDelay: "1200ms" }}
         >
           <Link
@@ -188,23 +226,26 @@ export default function Opening({ products }: { products: Product[] }) {
       </div>
 
       {/* The scene. */}
-      <div className="pack-scene relative -mt-6 aspect-[5/6] sm:aspect-[16/11] lg:mt-[3vw] lg:aspect-[2048/768]">
+      <div className="pack-scene relative aspect-[941/1672] sm:-mt-6 sm:aspect-[16/11] lg:mt-[3vw] lg:aspect-[2048/768]">
+        {/* One photograph per layout; each device downloads only its own.
+            next/image cannot switch sources by breakpoint, so this is the
+            documented art-direction pattern (getImageProps + <picture>). */}
         <picture>
           <source media="(min-width: 1024px)" srcSet={wideSrcSet} sizes="100vw" />
-          {/* next/image cannot switch sources by breakpoint; this is the
-              documented art-direction pattern (getImageProps + <picture>). */}
+          <source media="(min-width: 640px)" srcSet={tabletSrcSet} sizes="200vw" />
           <img
-            {...compactImg}
+            {...phoneImg}
             alt={SCENE_ALT}
             loading="eager"
             fetchPriority="high"
-            className="absolute inset-0 h-full w-full object-cover object-[46%_50%] [mask-image:linear-gradient(to_bottom,transparent,black_16%)] sm:object-[28%_50%] lg:object-fill lg:[mask-image:linear-gradient(to_bottom,transparent,black_10%)]"
+            className="absolute inset-0 h-full w-full object-cover sm:object-[28%_50%] sm:[mask-image:linear-gradient(to_bottom,transparent,black_16%)] lg:object-fill lg:[mask-image:linear-gradient(to_bottom,transparent,black_10%)]"
           />
         </picture>
 
-        {/* Compact: in the wall space above the packs. */}
+        {/* Tablets: in the wall space above the packs. (Phones carry the copy
+            there instead, and show this line above the chips.) */}
         <p
-          className="animate-rise absolute top-[24%] left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 font-numeral text-[0.6rem] whitespace-nowrap uppercase tracking-[0.28em] text-ink/50 lg:hidden"
+          className="animate-rise absolute top-[24%] left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 font-numeral text-[0.6rem] whitespace-nowrap uppercase tracking-[0.28em] text-ink/50 sm:flex lg:hidden"
           style={{ animationDelay: "1900ms" }}
         >
           Tap a pack to explore
@@ -231,7 +272,10 @@ export default function Opening({ products }: { products: Product[] }) {
 
       {/* Compact: names beneath the scene, since labels would collide over
           packs this close together. */}
-      <ul className="scrollbar-none relative z-20 flex gap-2 overflow-x-auto px-5 pt-5 pb-8 sm:px-8 lg:hidden">
+      <p className="relative z-20 px-5 pt-5 font-numeral text-[0.6rem] uppercase tracking-[0.28em] text-ink/50 sm:hidden">
+        Tap a pack to explore
+      </p>
+      <ul className="scrollbar-none relative z-20 flex gap-2 overflow-x-auto px-5 pt-3 pb-8 sm:px-8 sm:pt-5 lg:hidden">
         {products.map((product) => {
           const amount = Number(product.priceRange.minVariantPrice.amount);
           return (
@@ -267,6 +311,7 @@ function PackSpot({ product, index }: { product: Product; index: number }) {
   const accent = accentFor(product.handle);
   const wide = WIDE[index];
   const compact = COMPACT[index];
+  const phone = PHONE[index];
   const name = shortNameFor(product.handle, product.title);
   const amount = Number(product.priceRange.minVariantPrice.amount);
   const price = amount > 0 ? formatMoney(product.priceRange.minVariantPrice) : null;
@@ -280,8 +325,11 @@ function PackSpot({ product, index }: { product: Product; index: number }) {
       <Link
         href={`/products/${product.handle}`}
         aria-label={`${product.title}${price ? `, ${price}` : ""}`}
-        className="pack-spot group absolute bottom-[var(--bc)] left-[var(--xc)] h-[var(--hc)] w-0 outline-none lg:bottom-[var(--bw)] lg:left-[var(--xw)] lg:h-[var(--hw)]"
+        className="pack-spot group absolute bottom-[var(--bp)] left-[var(--xp)] h-[var(--hp)] w-0 outline-none sm:bottom-[var(--bc)] sm:left-[var(--xc)] sm:h-[var(--hc)] lg:bottom-[var(--bw)] lg:left-[var(--xw)] lg:h-[var(--hw)]"
         style={{
+          ["--xp" as string]: `${phone.x}%`,
+          ["--bp" as string]: `${100 - phone.b}%`,
+          ["--hp" as string]: `${phone.h}%`,
           ["--xc" as string]: `${compact.x}%`,
           ["--bc" as string]: `${100 - compact.b}%`,
           ["--hc" as string]: `${compact.h}%`,
