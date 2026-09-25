@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Reveal from "@/components/ui/Reveal";
 import Botanical from "@/components/ui/Botanical";
-import { ADDRESS, SOCIALS } from "@/lib/brand/content";
+import AvailableOn from "@/components/ui/AvailableOn";
+import InstagramGlyph from "@/components/ui/InstagramGlyph";
+import { ADDRESS, INSTAGRAM, SUPPORT_EMAIL } from "@/lib/brand/content";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -28,8 +30,20 @@ export default function ContactPage() {
         </h1>
       </header>
 
-      <div className="mt-14 grid gap-12 sm:grid-cols-2 lg:gap-20">
+      <div className="mt-14 grid gap-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16">
         <Reveal>
+          <h2 className="font-numeral text-[0.66rem] uppercase tracking-[0.22em] text-ink/45">
+            Customer support
+          </h2>
+          <a
+            href={`mailto:${SUPPORT_EMAIL}`}
+            className="mt-6 inline-block text-lg text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
+          >
+            {SUPPORT_EMAIL}
+          </a>
+        </Reveal>
+
+        <Reveal delay={90}>
           <h2 className="font-numeral text-[0.66rem] uppercase tracking-[0.22em] text-ink/45">
             Registered address
           </h2>
@@ -42,21 +56,25 @@ export default function ContactPage() {
           </address>
         </Reveal>
 
-        <Reveal delay={120}>
+        <Reveal delay={180}>
           <h2 className="font-numeral text-[0.66rem] uppercase tracking-[0.22em] text-ink/45">
             Find us
           </h2>
-          <ul className="mt-6 space-y-2 text-lg text-ink/75">
-            {SOCIALS.map((platform) => (
-              <li key={platform}>{platform}</li>
-            ))}
-          </ul>
-          <p className="mt-6 text-sm text-ink/40">
-            Social profile links and a support email address still need to be
-            added — they aren&rsquo;t published on the current site.
-          </p>
+          <a
+            href={INSTAGRAM.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex items-center gap-2.5 text-lg text-ink/75 transition-colors hover:text-ink"
+          >
+            <InstagramGlyph className="h-5 w-5" />
+            {INSTAGRAM.handle}
+          </a>
         </Reveal>
       </div>
+
+      <Reveal delay={240} className="mt-16 border-t border-ink/10 pt-12">
+        <AvailableOn />
+      </Reveal>
     </div>
   );
 }

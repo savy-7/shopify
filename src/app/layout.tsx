@@ -43,10 +43,18 @@ export const metadata: Metadata = {
   },
   description:
     "Carefully selected nuts, dry fruits and thoughtfully curated blends — with a focus on quality, taste and the simple goodness of real ingredients.",
+  // The share image itself is src/app/opengraph-image.jpg (file convention —
+  // Next adds the og:image tags and every page inherits it).
   openGraph: {
     title: "Goodness Crafted",
     description: "Goodness, thoughtfully crafted.",
     type: "website",
+    siteName: "Goodness Crafted",
+    locale: "en_IN",
+  },
+  // X falls back to og:image; this just asks for the large preview card.
+  twitter: {
+    card: "summary_large_image",
   },
 };
 

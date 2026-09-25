@@ -1,14 +1,33 @@
+const POLICY_FIELDS = `#graphql
+  fragment PolicyFields on ShopPolicy {
+    title
+    url
+  }
+`;
+
 export const SHOP_QUERY = `#graphql
+  ${POLICY_FIELDS}
   query Shop {
     shop {
       name
+      privacyPolicy { ...PolicyFields }
+      termsOfService { ...PolicyFields }
+      shippingPolicy { ...PolicyFields }
+      refundPolicy { ...PolicyFields }
     }
   }
 `;
 
+export type ShopPolicy = { title: string; url: string };
+
 export type ShopQueryResult = {
   shop: {
     name: string;
+    // Null until the merchant fills that policy in under Settings → Policies.
+    privacyPolicy: ShopPolicy | null;
+    termsOfService: ShopPolicy | null;
+    shippingPolicy: ShopPolicy | null;
+    refundPolicy: ShopPolicy | null;
   };
 };
 

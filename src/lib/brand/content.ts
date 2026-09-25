@@ -17,23 +17,27 @@ export const MISSION = "We believe good food doesn't need to be complicated.";
 export const PROMISE = "When the ingredients are good, every bite feels better.";
 
 export const INTRO =
-  "At Goodness Crafted, we bring together carefully selected nuts, dry fruits and thoughtfully curated blends — with a focus on quality, taste and the simple goodness of real ingredients.";
+  "At Goodness Crafted, we believe everyday snacking can be simple and still feel special. We bring together quality nuts, dry fruits and blends chosen for their taste, texture and everyday appeal.";
+
+/** hello@ is a real, checked inbox — this is the one support address the
+ *  site should show anywhere it names a way to reach the brand. */
+export const SUPPORT_EMAIL = "hello@goodnesscrafted.com";
 
 export const CLOSING =
   "Goodness worth coming back to. Thoughtfully chosen ingredients, carefully crafted products and a simple belief — when you start with good, you can create something truly worth enjoying.";
 
 export const PILLARS = [
   {
-    title: "Carefully Selected",
-    body: "Ingredients chosen with attention to quality, taste and consistency.",
+    title: "Quality You Can See",
+    body: "From the ingredients we choose to the details on every pack, we pay attention to what makes a product feel worth bringing home.",
   },
   {
-    title: "Crafted with Care",
-    body: "Thoughtful sourcing and careful handling from selection to pack.",
+    title: "Simple by Choice",
+    body: "Straightforward products made with ingredients you know and enjoy.",
   },
   {
-    title: "Made to Be Enjoyed",
-    body: "Beautifully simple products created for everyday moments.",
+    title: "Made for Everyday",
+    body: "For your morning bowl, afternoon snack, travel bag or the table you share with others.",
   },
 ] as const;
 
@@ -77,15 +81,14 @@ export const ABOUT = {
     ],
   },
   founder: {
+    eyebrow: "A note from our founder",
+    heading: "Why I started Goodness Crafted",
     name: "Chhavi",
     role: "Founder, Goodness Crafted",
-    quote:
-      "Goodness Crafted started with a simple idea — to create something of my own that felt thoughtful, beautiful and genuinely good.",
     body: [
-      "What began as an idea slowly became a journey of choosing the right products, getting the little details right and building a brand I could truly call my own.",
-      "I wanted Goodness Crafted to be about more than just nuts and dry fruits. I wanted every product to feel carefully chosen, thoughtfully presented and made to be enjoyed.",
-      "We're only at the beginning, but every pack carries a little piece of that journey.",
-      "Thank you for being here.",
+      "I've always loved the simplicity of good ingredients — something you can enjoy every day, share with family, or simply keep close.",
+      "I wanted to make everyday nuts and dry fruits feel a little more special, from what's inside the pack to how it reaches you.",
+      "That idea became Goodness Crafted.",
     ],
   },
   journey: {
@@ -133,5 +136,35 @@ export const ADDRESS = [
   "East Delhi 110092",
 ] as const;
 
-/** Platforms linked from the live footer. URLs are unknown, so they are not guessed. */
-export const SOCIALS = ["Instagram", "YouTube", "TikTok", "Twitter", "Threads"] as const;
+/** The brand's one social account. */
+export const INSTAGRAM = {
+  handle: "@goodnesscrafted",
+  url: "https://www.instagram.com/goodnesscrafted",
+} as const;
+
+/**
+ * Where else the range is sold. Logos are the platforms' own marks, used only
+ * to say "available here". `logo: null` renders the name instead — used for
+ * Instamart until its official logo file is supplied (the only public copies
+ * found were a different company's). `url` is null until the listing links
+ * are supplied; the tiles aren't links until then rather than guessing.
+ */
+export const MARKETPLACES: {
+  name: string;
+  logo: { src: string; width: number; height: number } | null;
+  /** Tile colour, when the mark belongs on its brand colour rather than white. */
+  tile?: string;
+  url: string | null;
+}[] = [
+  // Blinkit's own logo is a yellow app-icon square; cropped to its wordmark
+  // and set on the same yellow so it stays legible at tile size.
+  {
+    name: "Blinkit",
+    logo: { src: "/brand/marketplaces/blinkit-wordmark.svg", width: 3015, height: 884 },
+    tile: "#F8CB46",
+    url: null,
+  },
+  { name: "Amazon", logo: { src: "/brand/marketplaces/amazon.svg", width: 603, height: 182 }, url: null },
+  { name: "Instamart", logo: null, url: null },
+  { name: "Zepto", logo: { src: "/brand/marketplaces/zepto.svg", width: 90, height: 30 }, url: null },
+];

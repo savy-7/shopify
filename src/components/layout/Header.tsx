@@ -4,13 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
+import Search from "./Search";
 
 const NAV_LINKS = [
   { href: "/shop", label: "Shop" },
   { href: "/gifting", label: "Gifting" },
-  { href: "/about", label: "About" },
+  { href: "/about", label: "About us" },
   { href: "/contact", label: "Contact" },
-  { href: "/account", label: "Account" },
 ];
 
 export default function Header() {
@@ -50,6 +50,28 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2.5">
+          <Search />
+
+          <Link
+            href="/account"
+            aria-label="Your account"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 transition-colors hover:border-ink/40"
+          >
+            <svg
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+              className="h-[18px] w-[18px]"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.6}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="10" cy="6.5" r="3.5" />
+              <path d="M3.5 17c1.2-3.6 4-5.3 6.5-5.3s5.3 1.7 6.5 5.3" />
+            </svg>
+          </Link>
+
           <button
             type="button"
             aria-label={`Open cart${quantity > 0 ? `, ${quantity} items` : ""}`}

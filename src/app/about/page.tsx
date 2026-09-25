@@ -56,12 +56,13 @@ export default function AboutPage() {
 
           <div>
             <Reveal>
-              <p id="founder-heading" className={`${eyebrow} text-ink/45`}>
-                A note from our founder
-              </p>
-              <blockquote className="mt-8 font-serif text-[1.7rem] leading-[1.25] italic text-ink sm:text-[2.1rem]">
-                &ldquo;{founder.quote}&rdquo;
-              </blockquote>
+              <p className={`${eyebrow} text-ink/45`}>{founder.eyebrow}</p>
+              <h2
+                id="founder-heading"
+                className="mt-5 text-[2rem] leading-[1.05] font-semibold tracking-[-0.012em] sm:text-[2.6rem]"
+              >
+                {founder.heading}
+              </h2>
             </Reveal>
 
             <div className="mt-10 space-y-5">
