@@ -55,13 +55,15 @@ type BrandProduct = {
 };
 
 const BRAND: Record<string, BrandProduct> = {
-  "premium-almonds": { accent: "almond", shortName: "Almonds", botanical: "Prunus dulcis" },
-  "roasted-salted-pistachios": { accent: "pistachio", shortName: "Pistachios", botanical: "Pistacia vera" },
-  "premium-cashews": { accent: "cashew", shortName: "Cashews", botanical: "Anacardium occidentale" },
+  "premium-almonds": { accent: "almond", shortName: "Almonds", botanical: "Prunus dulcis — the almond" },
+  "roasted-salted-pistachios": { accent: "pistachio", shortName: "Pistachios", botanical: "Pistacia vera — the pistachio" },
+  "premium-cashews": { accent: "cashew", shortName: "Cashews", botanical: "Anacardium occidentale — the cashew" },
+  // Not a single species, so it gets no common-name suffix — there isn't one.
   "nuts-seeds-mix": { accent: "mix", shortName: "Mix", botanical: "Nuts & seeds, blended" },
-  "premium-raisins": { accent: "raisin", shortName: "Raisins", botanical: "Vitis vinifera" },
-  "premium-arabian-dates": { accent: "date", shortName: "Dates", botanical: "Phoenix dactylifera" },
-  "premium-walnuts": { accent: "walnut", shortName: "Walnuts", botanical: "Juglans regia" },
+  // The species is the grapevine; raisins are its dried fruit.
+  "premium-raisins": { accent: "raisin", shortName: "Raisins", botanical: "Vitis vinifera — the grape" },
+  "premium-arabian-dates": { accent: "date", shortName: "Dates", botanical: "Phoenix dactylifera — the date" },
+  "premium-walnuts": { accent: "walnut", shortName: "Walnuts", botanical: "Juglans regia — the walnut" },
 };
 
 /** Display order for the hero rotator, sequenced so adjacent accents contrast. */
