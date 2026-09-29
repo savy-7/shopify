@@ -116,20 +116,20 @@ export default function SpecimenPlate({ specimens }: { specimens: Specimen[] }) 
         <div className="relative mt-12 px-2 py-10 sm:px-6 lg:mt-14 lg:py-14">
           <CropMarks />
 
-          <div className="relative flex h-[clamp(330px,48vw,540px)] items-center justify-center">
-            {/* Name first, so the ring and the pack sit in front of it. */}
-            <span
-              key={`name-${active.handle}`}
-              aria-hidden="true"
-              className="animate-nameplate pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-serif text-[clamp(4.2rem,17vw,15rem)] leading-none font-normal whitespace-nowrap italic"
-              style={{
-                WebkitTextStroke: "clamp(1px, 0.12vw, 2px) var(--accent)",
-                color: "transparent",
-              }}
-            >
-              {active.shortName}
-            </span>
+          {/* Solid and clear of the ring/pack entirely — it used to sit behind
+              them as a huge stroked-outline watermark, interlocked with the
+              pack, but the visible slivers of an outline that thin were
+              illegible wherever they crossed the ring's lines or the photo's
+              own edges. This reads at a glance instead. */}
+          <p
+            key={`name-${active.handle}`}
+            className="animate-nameplate text-center font-serif text-[clamp(2.6rem,7.5vw,5rem)] leading-none font-normal italic"
+            style={{ color: "var(--accent-ink)" }}
+          >
+            {active.shortName}
+          </p>
 
+          <div className="relative mt-4 flex h-[clamp(300px,42vw,480px)] items-center justify-center sm:mt-6">
             <Botanical
               name="ring"
               strokeWidth={0.9}
