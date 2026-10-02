@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { readSession } from "@/lib/auth/session";
-import { getCustomerAccount } from "@/lib/shopify/customer-account";
+import { getCustomerAccount, type OrderLineItem } from "@/lib/shopify/customer-account";
 import { formatMoney } from "@/lib/format";
 import Reveal from "@/components/ui/Reveal";
 
@@ -84,8 +85,10 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
                   Boolean(t.url)
                 );
 
+              const lineItems = order.lineItems.edges.map((edge) => edge.node);
+
               return (
-                <li key={order.id} className="py-4">
+                <li key={order.id} className="py-5">
                   <div className="flex items-center justify-between gap-4">
                     <div>
                       <p className="font-medium">{order.name}</p>
@@ -103,18 +106,25 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
                     </p>
                   </div>
 
+                  <ul className="mt-4 space-y-3">
+                    {lineItems.map((item, i) => (
+                      <OrderLineItemRow key={i} item={item} />
+                    ))}
+                  </ul>
+
                   {tracking.length > 0 && (
-                    <div className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1.5">
+                    <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1.5 border-t border-ink/5 pt-4">
                       {tracking.map((t, i) => (
                         <a
                           key={i}
                           href={t.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-numeral text-[0.68rem] uppercase tracking-[0.15em] text-ink/60 underline decoration-ink/20 underline-offset-4 transition-colors hover:text-ink"
+                          className="inline-flex items-center gap-1.5 font-numeral text-[0.68rem] uppercase tracking-[0.15em] text-ink/60 underline decoration-ink/20 underline-offset-4 transition-colors hover:text-ink"
                         >
                           Track order{t.company ? ` · ${t.company}` : ""}
                           {tracking.length > 1 && t.number ? ` (${t.number})` : ""}
+                          <span aria-hidden="true">&#8599;</span>
                         </a>
                       ))}
                     </div>
@@ -126,6 +136,37 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
         )}
       </Reveal>
     </div>
+  );
+}
+
+function OrderLineItemRow({ item }: { item: OrderLineItem }) {
+  return (
+    <li className="flex items-center gap-3">
+      <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-stone">
+        {item.image && (
+          <Image
+            src={item.image.url}
+            alt={item.image.altText ?? item.title}
+            fill
+            sizes="56px"
+            // Shopify product photos ship on an opaque near-white backdrop;
+            // multiply drops it out against the thumbnail's own background.
+            // `fill` rather than width/height: the Customer Account API's
+            // Image type allows both to come back null.
+            className="pack-blend object-contain p-1.5"
+          />
+        )}
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium">
+          {item.title}
+          {item.variantTitle && item.variantTitle !== "Default Title" && (
+            <span className="text-ink/50"> · {item.variantTitle}</span>
+          )}
+        </p>
+        <p className="text-xs text-ink/45">Qty {item.quantity}</p>
+      </div>
+    </li>
   );
 }
 

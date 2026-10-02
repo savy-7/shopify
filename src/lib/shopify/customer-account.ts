@@ -43,7 +43,14 @@ const CUSTOMER_QUERY = `#graphql
               edges {
                 node {
                   title
+                  variantTitle
                   quantity
+                  image {
+                    url
+                    altText
+                    width
+                    height
+                  }
                 }
               }
             }
@@ -77,6 +84,15 @@ export type Fulfillment = {
   trackingInformation: { company: string | null; number: string | null; url: string | null }[];
 };
 
+export type OrderLineItem = {
+  title: string;
+  /** e.g. "500 g" on a product with size variants; null on a single-variant product. */
+  variantTitle: string | null;
+  quantity: number;
+  /** Null for a custom line item, or a product since deleted. */
+  image: { url: string; altText: string | null; width: number | null; height: number | null } | null;
+};
+
 export type CustomerOrder = {
   id: string;
   name: string;
@@ -84,7 +100,7 @@ export type CustomerOrder = {
   financialStatus: string | null;
   fulfillmentStatus: string | null;
   totalPrice: Money;
-  lineItems: { edges: { node: { title: string; quantity: number } }[] };
+  lineItems: { edges: { node: OrderLineItem }[] };
   fulfillments: { edges: { node: Fulfillment }[] };
 };
 
