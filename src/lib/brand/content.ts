@@ -23,6 +23,12 @@ export const INTRO =
  *  site should show anywhere it names a way to reach the brand. */
 export const SUPPORT_EMAIL = "hello@goodnesscrafted.com";
 
+/**
+ * FSSAI licence number. Food businesses selling in India must display this;
+ * it belongs on every page, which is why it sits in the footer.
+ */
+export const FSSAI_LICENCE = "13326003000187";
+
 export const CLOSING =
   "Goodness worth coming back to. Thoughtfully chosen ingredients, carefully crafted products and a simple belief — when you start with good, you can create something truly worth enjoying.";
 

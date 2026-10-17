@@ -7,8 +7,10 @@ import {
   ACCENT_HEX,
   ACCENT_TEXT_HEX,
   accentFor,
+  isPack,
   packClassName,
   shortNameFor,
+  sizeFor,
 } from "@/lib/brand/palette";
 import { formatMoney } from "@/lib/format";
 import NutIcon, { iconForHandle } from "@/components/ui/NutIcon";
@@ -25,6 +27,9 @@ export default function ProductCard({
   const amount = Number(product.priceRange.minVariantPrice.amount);
   const variant = product.variants.edges[0]?.node;
   const { addItem, isPending } = useCart();
+  // A hamper's photograph is a full styled scene, so it fills the tile
+  // instead of standing in it the way a cut-out pack does.
+  const packShot = isPack(product.handle);
 
   const canQuickAdd = Boolean(variant) && amount > 0 && product.availableForSale;
 
@@ -40,14 +45,25 @@ export default function ProductCard({
       {/* The tint is mixed toward paper rather than set as a flat alpha, so the
           panel stays light enough for the pack's multiply composite to work. */}
       <div
-        className="relative flex aspect-[4/5] items-end justify-center overflow-hidden rounded-[1.75rem] transition-colors duration-500 ease-[var(--ease-brand)]"
+        // A pack stands in a tall tile; a hamper is photographed wide (front
+        // and back of the box, side by side), and cropping that into a
+        // portrait tile shows a sliver of neither half.
+        className={`relative flex items-end justify-center overflow-hidden rounded-[1.75rem] transition-colors duration-500 ease-[var(--ease-brand)] ${
+          packShot ? "aspect-[4/5]" : "aspect-[2/1]"
+        }`}
         style={{
           backgroundColor: "color-mix(in oklab, var(--accent) 9%, var(--color-paper))",
         }}
       >
         <span
           aria-hidden="true"
-          className="absolute top-4 left-5 flex items-center gap-2 font-numeral text-[0.6rem] uppercase tracking-[0.2em] opacity-60"
+          // On a hamper the tile is a photograph, so the label gets a chip
+          // behind it rather than relying on the accent reading off paper.
+          className={
+            packShot
+              ? "absolute top-4 left-5 flex items-center gap-2 font-numeral text-[0.6rem] uppercase tracking-[0.2em] opacity-60"
+              : "absolute top-4 left-4 z-10 flex items-center gap-2 rounded-full bg-paper/85 px-3 py-1.5 font-numeral text-[0.6rem] uppercase tracking-[0.2em] backdrop-blur-sm"
+          }
           style={{ color: "var(--accent-ink)" }}
         >
           <NutIcon
@@ -64,17 +80,27 @@ export default function ProductCard({
           </span>
         )}
 
-        {product.featuredImage && (
-          <Image
-            src={product.featuredImage.url}
-            alt={product.featuredImage.altText ?? `${product.title} 250 g pack`}
-            width={product.featuredImage.width}
-            height={product.featuredImage.height}
-            priority={priority}
-            sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 22vw"
-            className={`${packClassName(product.handle)} h-[86%] w-auto object-contain transition-transform duration-600 ease-[var(--ease-brand)] group-hover:-translate-y-2 group-hover:scale-[1.03]`}
-          />
-        )}
+        {product.featuredImage &&
+          (packShot ? (
+            <Image
+              src={product.featuredImage.url}
+              alt={product.featuredImage.altText ?? `${product.title} 250 g pack`}
+              width={product.featuredImage.width}
+              height={product.featuredImage.height}
+              priority={priority}
+              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 22vw"
+              className={`${packClassName(product.handle)} h-[86%] w-auto object-contain transition-transform duration-600 ease-[var(--ease-brand)] group-hover:-translate-y-2 group-hover:scale-[1.03]`}
+            />
+          ) : (
+            <Image
+              src={product.featuredImage.url}
+              alt={product.featuredImage.altText ?? product.title}
+              fill
+              priority={priority}
+              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 22vw"
+              className="object-contain p-3 transition-transform duration-600 ease-[var(--ease-brand)] group-hover:scale-[1.03]"
+            />
+          ))}
 
         {canQuickAdd && (
           <button
@@ -106,7 +132,7 @@ export default function ProductCard({
         </p>
       </div>
       <p className="mt-1 font-numeral text-[0.62rem] uppercase tracking-[0.18em] text-ink/35">
-        250 g
+        {sizeFor(product.handle)}
       </p>
     </Link>
   );

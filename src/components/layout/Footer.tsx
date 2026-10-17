@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { shopifyFetch } from "@/lib/shopify/client";
 import { SHOP_QUERY, type ShopQueryResult } from "@/lib/shopify/queries";
-import { ADDRESS, INSTAGRAM, SUPPORT_EMAIL, TAGLINE } from "@/lib/brand/content";
+import { ADDRESS, FSSAI_LICENCE, INSTAGRAM, SUPPORT_EMAIL, TAGLINE } from "@/lib/brand/content";
 import AvailableOn from "@/components/ui/AvailableOn";
 import InstagramGlyph from "@/components/ui/InstagramGlyph";
 
@@ -88,10 +88,21 @@ export default async function Footer() {
 
         <AvailableOn className="mt-12" />
 
-        <div className="mt-16 flex flex-col gap-5 border-t border-ink/10 pt-7 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-numeral text-[0.62rem] tracking-[0.15em] text-ink/40">
-            © {year} {shop.name}
-          </p>
+        <div className="mt-16 flex flex-col gap-5 border-t border-ink/10 pt-7 sm:flex-row sm:items-start sm:justify-between">
+          <div className="font-numeral text-[0.62rem] tracking-[0.15em] text-ink/40">
+            <p>© {year} {shop.name}</p>
+            {/* Required of food businesses selling in India, so it goes on
+                every page rather than only the contact page. */}
+            <p className="mt-1.5">
+              FSSAI Lic. No. {FSSAI_LICENCE} &nbsp;|&nbsp; Consumer care:{" "}
+              <a
+                href={`mailto:${SUPPORT_EMAIL}`}
+                className="underline decoration-ink/20 underline-offset-4 transition-colors hover:text-ink"
+              >
+                {SUPPORT_EMAIL}
+              </a>
+            </p>
+          </div>
 
           <nav aria-label="Policies">
             <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">

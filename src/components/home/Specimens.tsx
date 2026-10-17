@@ -5,13 +5,17 @@ import {
   ACCENT_TEXT_HEX,
   accentFor,
   botanicalFor,
+  isPack,
   packClassName,
   shortNameFor,
 } from "@/lib/brand/palette";
 import SpecimenPlate, { type Specimen } from "./SpecimenPlate";
 
 export default function Specimens({ products }: { products: Product[] }) {
-  const specimens: Specimen[] = products.map((product) => {
+  // Packs only. A hamper has no species name and is photographed as a styled
+  // gift scene, so it would sit oddly inside a botanical plate's leaf ring —
+  // it gets its own section instead.
+  const specimens: Specimen[] = products.filter((p) => isPack(p.handle)).map((product) => {
     const amount = Number(product.priceRange.minVariantPrice.amount);
     const accent = accentFor(product.handle);
 

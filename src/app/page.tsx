@@ -9,26 +9,30 @@ import Gifting from "@/components/home/Gifting";
 import Closing from "@/components/home/Closing";
 import Ticker from "@/components/ui/Ticker";
 import { getProducts, orderProducts } from "@/lib/shopify/products";
+import { isPack } from "@/lib/brand/palette";
 import { PACK_LINE } from "@/lib/brand/content";
 
 export default async function Home() {
   const products = orderProducts(await getProducts(24));
+  // The hampers are presented on their own terms in the gifting section —
+  // they're a styled gift photograph, not a cut-out pack, so they don't
+  // belong in the hero's pack row or the botanical plates.
+  const packs = products.filter((product) => isPack(product.handle));
+  const hampers = products.filter((product) => !isPack(product.handle));
 
-  const tickerItems = products.length
-    ? products.map((p) => p.title)
-    : [PACK_LINE];
+  const tickerItems = packs.length ? packs.map((p) => p.title) : [PACK_LINE];
 
   return (
     <>
       <IntroCurtain />
-      <Opening products={products} />
+      <Opening products={packs} />
       <Ticker items={tickerItems} />
-      <Specimens products={products} />
+      <Specimens products={packs} />
       <Intention />
       <Story />
       <Range products={products} />
       <Trust />
-      <Gifting />
+      <Gifting hampers={hampers} />
       <Closing />
     </>
   );

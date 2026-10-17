@@ -4,6 +4,8 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
 import CartDrawer from "@/components/cart/CartDrawer";
+import MetaPixel from "@/components/analytics/MetaPixel";
+import { META_DOMAIN_VERIFICATION } from "@/lib/brand/analytics";
 import "./globals.css";
 
 /**
@@ -56,6 +58,11 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
   },
+  verification: {
+    // Meta Business domain verification. Emitted site-wide rather than only on
+    // the homepage — Meta checks whichever URL it crawls.
+    other: { "facebook-domain-verification": META_DOMAIN_VERIFICATION },
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -82,6 +89,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </noscript>
       </head>
       <body className="flex min-h-full flex-col bg-paper text-ink">
+        <MetaPixel />
         <CartProvider>
           <Header />
           <main className="flex-1">{children}</main>

@@ -3,7 +3,7 @@ import Reveal from "@/components/ui/Reveal";
 import Botanical from "@/components/ui/Botanical";
 import AvailableOn from "@/components/ui/AvailableOn";
 import InstagramGlyph from "@/components/ui/InstagramGlyph";
-import { ADDRESS, INSTAGRAM, SUPPORT_EMAIL } from "@/lib/brand/content";
+import { ADDRESS, FSSAI_LICENCE, INSTAGRAM, SUPPORT_EMAIL } from "@/lib/brand/content";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -34,6 +34,24 @@ export default function ContactPage() {
         <Reveal>
           <h2 className="font-numeral text-[0.66rem] uppercase tracking-[0.22em] text-ink/45">
             Customer support
+          </h2>
+          <a
+            href={`mailto:${SUPPORT_EMAIL}`}
+            className="mt-6 inline-block text-lg text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
+          >
+            {SUPPORT_EMAIL}
+          </a>
+
+          <h2 className="mt-10 font-numeral text-[0.66rem] uppercase tracking-[0.22em] text-ink/45">
+            Food licence
+          </h2>
+          <p className="mt-6 text-lg text-ink/75">
+            FSSAI License No.{" "}
+            <span className="font-numeral tabular-nums">{FSSAI_LICENCE}</span>
+          </p>
+
+          <h2 className="mt-10 font-numeral text-[0.66rem] uppercase tracking-[0.22em] text-ink/45">
+            Consumer care
           </h2>
           <a
             href={`mailto:${SUPPORT_EMAIL}`}

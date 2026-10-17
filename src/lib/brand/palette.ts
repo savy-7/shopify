@@ -13,7 +13,8 @@ export type Accent =
   | "raisin"
   | "date"
   | "pistachio"
-  | "walnut";
+  | "walnut"
+  | "festive";
 
 export const DEFAULT_ACCENT: Accent = "pistachio";
 
@@ -29,6 +30,8 @@ export const ACCENT_HEX: Record<Accent, string> = {
   date: "#1b2436",
   pistachio: "#738b1d",
   walnut: "#7a0a19",
+  // The hampers' deep red and gold, from the gift-box photography.
+  festive: "#8c1c2b",
 };
 
 /**
@@ -49,10 +52,23 @@ type BrandProduct = {
   shortName: string;
   /**
    * Species name for the plate caption. The mix is a blend of several, so it
-   * gets a plain description rather than an invented binomial.
+   * gets a plain description rather than an invented binomial. Null for
+   * anything that isn't a single-ingredient pack.
    */
-  botanical: string;
+  botanical: string | null;
+  /**
+   * False for products that aren't one of the packs: the hampers, which are
+   * photographed as a styled gift scene rather than a pack shot on white.
+   * They are excluded from the specimen plates and the hero's pack row (both
+   * of which assume a cut-out pack and a species name), and their photographs
+   * skip the multiply composite, which would tint a full-bleed photo.
+   */
+  isPack?: boolean;
+  /** Shown under the name on a card. Defaults to the standard pack size. */
+  size?: string;
 };
+
+export const DEFAULT_PACK_SIZE = "250 g";
 
 const BRAND: Record<string, BrandProduct> = {
   "premium-almonds": { accent: "almond", shortName: "Almonds", botanical: "Prunus dulcis — the almond" },
@@ -64,10 +80,24 @@ const BRAND: Record<string, BrandProduct> = {
   "premium-raisins": { accent: "raisin", shortName: "Raisins", botanical: "Vitis vinifera — the grape" },
   "premium-arabian-dates": { accent: "date", shortName: "Dates", botanical: "Phoenix dactylifera — the date" },
   "premium-walnuts": { accent: "walnut", shortName: "Walnuts", botanical: "Juglans regia — the walnut" },
+  // Gift hampers. Sold alongside the packs but presented differently — see
+  // the isPack note above.
+  "dry-fruit-celebration-hamper": {
+    accent: "festive",
+    shortName: "Festive Delight",
+    botanical: null,
+    isPack: false,
+    size: "4 packs · 1 kg",
+  },
 };
 
 /** Display order for the hero rotator, sequenced so adjacent accents contrast. */
-export const SPECIMEN_ORDER = Object.keys(BRAND);
+export const SPECIMEN_ORDER = Object.keys(BRAND).filter((handle) => isPack(handle));
+
+/** True for the single-ingredient packs; false for the hampers. */
+export function isPack(handle: string): boolean {
+  return BRAND[handle]?.isPack !== false;
+}
 
 export function accentFor(handle: string): Accent {
   return BRAND[handle]?.accent ?? DEFAULT_ACCENT;
@@ -79,6 +109,10 @@ export function shortNameFor(handle: string, fallback: string): string {
 
 export function botanicalFor(handle: string): string | null {
   return BRAND[handle]?.botanical ?? null;
+}
+
+export function sizeFor(handle: string): string {
+  return BRAND[handle]?.size ?? DEFAULT_PACK_SIZE;
 }
 
 /**
@@ -102,5 +136,8 @@ export function isPaleAccent(accent: Accent): boolean {
 const NON_WHITE_BACKDROP = new Set(["nuts-seeds-mix"]);
 
 export function packClassName(handle: string): string {
+  // A styled photograph, not a pack on white: multiplying it would darken the
+  // whole image into the page background rather than drop a backdrop out.
+  if (!isPack(handle)) return "";
   return NON_WHITE_BACKDROP.has(handle) ? "pack-blend pack-normalize" : "pack-blend";
 }

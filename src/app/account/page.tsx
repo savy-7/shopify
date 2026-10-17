@@ -113,19 +113,30 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
                   </ul>
 
                   {tracking.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1.5 border-t border-ink/5 pt-4">
+                    <div className="mt-4 space-y-2 border-t border-ink/5 pt-4">
                       {tracking.map((t, i) => (
-                        <a
-                          key={i}
-                          href={t.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 font-numeral text-[0.68rem] uppercase tracking-[0.15em] text-ink/60 underline decoration-ink/20 underline-offset-4 transition-colors hover:text-ink"
-                        >
-                          Track order{t.company ? ` · ${t.company}` : ""}
-                          {tracking.length > 1 && t.number ? ` (${t.number})` : ""}
-                          <span aria-hidden="true">&#8599;</span>
-                        </a>
+                        <div key={i} className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                          <a
+                            href={t.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 font-numeral text-[0.68rem] uppercase tracking-[0.15em] text-ink/60 underline decoration-ink/20 underline-offset-4 transition-colors hover:text-ink"
+                          >
+                            Track order{t.company ? ` · ${t.company}` : ""}
+                            <span aria-hidden="true">&#8599;</span>
+                          </a>
+                          {/* Always shown, and selectable: some carriers' links
+                              land on their homepage rather than this shipment,
+                              and then the number is the only way through. */}
+                          {t.number && (
+                            <span className="font-numeral text-[0.68rem] text-ink/45">
+                              No.{" "}
+                              <span className="tabular-nums text-ink/70 select-all">
+                                {t.number}
+                              </span>
+                            </span>
+                          )}
+                        </div>
                       ))}
                     </div>
                   )}
